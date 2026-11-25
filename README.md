@@ -33,7 +33,7 @@ Plugius is a young personal project. It works on the author's Mac every day, but
 
 ## Install
 
-1. Download `Plugius-app.zip` from the [latest release](https://github.com/alanmortus-plug/plugius/releases/latest) (about 18 MB). You need macOS 11.3 or later, Apple Silicon or Intel. Nothing else: the app ships its own Python.
+1. Download `Plugius-app.zip` from the [latest release](https://github.com/and-bats/plugius/releases/latest) (about 18 MB). You need macOS 11.3 or later, Apple Silicon or Intel. Nothing else: the app ships its own Python.
 2. Unzip it and move `Plugius.app` to Applications. Do this before the first launch, otherwise the weekly scan cannot be turned on.
 3. Open it. The app is not notarized by Apple, so macOS blocks the first launch:
    - macOS 13 and later: open System Settings → Privacy & Security, scroll down and click Open Anyway next to the message about Plugius.
@@ -46,7 +46,7 @@ Plugius is a young personal project. It works on the author's Mac every day, but
 You need Command Line Tools for Xcode (`xcode-select --install`). Python for the app (about 50 MB) is downloaded once and checked against pinned SHA-256 hashes.
 
 ```bash
-git clone https://github.com/alanmortus-plug/plugius.git
+git clone https://github.com/and-bats/plugius.git
 cd plugius
 python3 tools/fetch_python.py
 python3 tools/build_app.py

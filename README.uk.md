@@ -33,7 +33,7 @@ Plugius — молодий особистий проєкт. Він щодня п
 
 ## Встановлення
 
-1. Завантаж `Plugius-app.zip` з [останнього релізу](https://github.com/alanmortus-plug/plugius/releases/latest) (близько 18 МБ). Потрібна macOS 11.3 або новіша, Apple Silicon чи Intel. Більше нічого: застосунок має власний Python.
+1. Завантаж `Plugius-app.zip` з [останнього релізу](https://github.com/and-bats/plugius/releases/latest) (близько 18 МБ). Потрібна macOS 11.3 або новіша, Apple Silicon чи Intel. Більше нічого: застосунок має власний Python.
 2. Розпакуй і перетягни `Plugius.app` у Програми. Зроби це до першого запуску, інакше тижневий автоскан не ввімкнеться.
 3. Відкрий. Застосунок не нотаризований Apple, тож перше відкриття macOS блокує:
    - macOS 13 і новіші: Системні параметри → Приватність і безпека, унизу «Все одно відкрити» біля повідомлення про Plugius.
@@ -46,7 +46,7 @@ Plugius — молодий особистий проєкт. Він щодня п
 Потрібні Command Line Tools (`xcode-select --install`). Python для застосунку (близько 50 МБ) завантажується один раз і перевіряється за закріпленими SHA-256.
 
 ```bash
-git clone https://github.com/alanmortus-plug/plugius.git
+git clone https://github.com/and-bats/plugius.git
 cd plugius
 python3 tools/fetch_python.py
 python3 tools/build_app.py
