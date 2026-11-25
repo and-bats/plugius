@@ -484,6 +484,9 @@ check(core.tr("Імовірно: інсталятор «Pro-Q.dmg» у Downloads
 check(core.tr("Встановлено пакетом com.fab.pkg", "en") == "Installed by package com.fab.pkg", "префікс «Встановлено пакетом»")
 check(core.tr("Ефект · Reverb · версія 1.2 · © Valhalla", "en") == "Effect · Reverb · version 1.2 · © Valhalla", "складений опис перекладається частинами")
 check(core.tr("Інструмент (AU)", "en") == "Instrument (AU)", "категорія з форматом")
+check(core.tr("Назва схожа на ліцензію, але вміст не перевірявся", "en") == "The name looks like a license, but the contents were not checked",
+      "точна фраза з комою перекладається цілою")
+check(core.tr("Ефект, Ефект з MIDI-входом", "en") == "Effect, Effect with MIDI input", "перелік категорій через кому")
 check(core.tr("Своя фраза власника", "en") == "Своя фраза власника", "невідома фраза лишається як є")
 check(core.tr("дата встановлення пакета (pkgutil)", "uk") == "дата встановлення пакета (pkgutil)", "українською нічого не змінюється")
 check(core.tr("", "en") == "" and core.tr(None, "en") is None, "порожнє значення лишається")

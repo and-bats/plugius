@@ -71,6 +71,8 @@ def lang_of(query):
 
 def _words(s):
     """Точна фраза або перелік точних фраз через кому («Ефект, Ефект з MIDI-входом»)."""
+    if s in EN:
+        return EN[s]
     parts = s.split(", ")
     return ", ".join(EN[x] for x in parts) if all(x in EN for x in parts) else None
 
