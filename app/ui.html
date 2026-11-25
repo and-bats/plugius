@@ -188,30 +188,30 @@ code{background:var(--chip);padding:1px 5px;border-radius:4px;font:12px var(--mo
   <h1 aria-label="Plugius"><span class="logo" aria-hidden="true"><span class="lp"><span class="stack"><i>P</i><i>P</i><i>P</i><i>P</i></span><b>P</b></span><b class="lugius">lugius</b></span></h1>
   <div class="stats" id="stats"></div>
   <div class="hr">
-    <a href="/api/export.csv"><button>CSV</button></a>
-    <button id="btnCancel" style="display:none">Зупинити</button>
-    <button id="btnScan" class="primary">Сканувати</button>
+    <a href="/api/export.csv" id="csvLink"><button>CSV</button></a>
+    <button id="btnCancel" style="display:none" data-i18n="btn.stop"></button>
+    <button id="btnScan" class="primary" data-i18n="btn.scan"></button>
   </div>
-  <section class="disk" id="disk" aria-label="Що займає місце на диску"></section>
+  <section class="disk" id="disk" data-i18n-aria="disk.aria"></section>
 </header>
 <nav>
-  <a data-tab="plugins" class="on">Плагіни</a>
-  <a data-tab="history">Історія змін</a>
-  <a data-tab="settings">Налаштування</a>
+  <a data-tab="plugins" class="on" data-i18n="tab.plugins"></a>
+  <a data-tab="history" data-i18n="tab.history"></a>
+  <a data-tab="settings" data-i18n="tab.settings"></a>
   <span id="scanState" class="sub"></span>
 </nav>
 <main>
   <section id="tab-plugins">
     <div class="bar">
-      <input id="q" type="search" placeholder="Пошук: назва, виробник, шлях" aria-label="Пошук" autocomplete="off">
-      <span class="flabel" id="fmtLabel">Продуктів у форматі:</span><div class="chips" id="fmtChips"></div>
-      <select id="platSel"><option value="">Усі платформи</option></select>
-      <select id="vendSel"><option value="">Усі виробники</option></select>
-      <label><input type="checkbox" id="fGroup"> За виробником</label>
-      <label title="Плагіни, що ставляться разом із програмами, наприклад Logic Pro чи Pro Tools"><input type="checkbox" id="fStock"> Штатні плагіни програм</label>
-      <label><input type="checkbox" id="fNoLic"> Без ліцензії</label>
-      <label><input type="checkbox" id="fGone"> Видалені з диска</label>
-      <label><input type="checkbox" id="fForeign"> Лише не для macOS</label>
+      <input id="q" type="search" data-i18n-ph="q.ph" data-i18n-aria="q.aria" autocomplete="off">
+      <span class="flabel" id="fmtLabel" data-i18n="fmt.label"></span><div class="chips" id="fmtChips"></div>
+      <select id="platSel"><option value=""></option></select>
+      <select id="vendSel"><option value=""></option></select>
+      <label><input type="checkbox" id="fGroup"> <span data-i18n="f.group"></span></label>
+      <label data-i18n-title="f.stock.title"><input type="checkbox" id="fStock"> <span data-i18n="f.stock"></span></label>
+      <label><input type="checkbox" id="fNoLic"> <span data-i18n="f.nolic"></span></label>
+      <label><input type="checkbox" id="fGone"> <span data-i18n="f.gone"></span></label>
+      <label><input type="checkbox" id="fForeign"> <span data-i18n="f.foreign"></span></label>
       <span class="newbar" id="newBar"></span>
     </div>
     <div id="tableWrap"></div>
@@ -223,10 +223,185 @@ code{background:var(--chip);padding:1px 5px;border-radius:4px;font:12px var(--mo
 <aside id="drawer" aria-hidden="true"></aside>
 <div class="toast" id="toast"></div>
 
+<script type="application/json" id="i18n">
+{
+"uk": {
+ "app.title": "Plugius — каталог плагінів",
+ "btn.stop": "Зупинити", "btn.scan": "Сканувати", "disk.aria": "Що займає місце на диску",
+ "tab.plugins": "Плагіни", "tab.history": "Історія змін", "tab.settings": "Налаштування",
+ "q.ph": "Пошук: назва, виробник, шлях", "q.aria": "Пошук", "fmt.label": "Продуктів у форматі:",
+ "plat.all": "Усі платформи", "vend.all": "Усі виробники",
+ "f.group": "За виробником", "f.stock": "Штатні плагіни програм",
+ "f.stock.title": "Плагіни, що ставляться разом із програмами, наприклад Logic Pro чи Pro Tools",
+ "f.nolic": "Без ліцензії", "f.gone": "Видалені з диска", "f.foreign": "Лише не для macOS",
+ "units": "Б КБ МБ ГБ",
+ "pl.product": ["продукт", "продукти", "продуктів"], "pl.file": ["файл", "файли", "файлів"],
+ "pl.vendor": ["виробник", "виробники", "виробників"], "pl.folder": ["тека", "теки", "тек"],
+ "lic.manual": "Записано", "lic.file": "Файл знайдено", "lic.none": "Не знайдено",
+ "src.none": "Не визначено", "src.probablyPrefix": "Імовірно", "src.probably": "Імовірно інсталятор",
+ "src.pkgPrefix": "Встановлено пакетом", "src.pkg": "Інсталятор",
+ "plat.universalPrefix": "Універсально", "vendor.guessMark": "припущ",
+ "migrated": "перенесено?", "migrated.title": "Дата файлу раніша, ніж цей Mac було налаштовано: імовірно, перенесено зі старого комп'ютера",
+ "tag.new": "нове", "tag.newFmt": "нове: {f}", "tag.newFmt.title": "Новий лише цей формат, решта файлів продукту вже були",
+ "tag.foreign.title": "Не працює на macOS", "tag.stock": "штатний",
+ "disk.less1": "менше 1%", "disk.more": "Ще {n}",
+ "tw.expand": "Розгорнути файли", "tw.collapse": "Згорнути файли", "tw.title": "Показати файли",
+ "vendor.guessed": "Виробника вгадано: {src}",
+ "file.label": "Файл: {name}", "file.gone": "файл зник", "file.new": "новий", "btn.finder": "У Finder",
+ "chip.title": "{n} мають файл {f}",
+ "newbar": "● Нове після сканування: {p}, {f}", "newbar.ack": "Позначити переглянутими",
+ "stat.disk": "на диску", "stat.check": "перевірити ліцензію",
+ "empty.catalog": "Каталог порожній. Натисніть «Сканувати», щоб знайти плагіни.",
+ "empty.filter": "Нічого не знайдено за цими фільтрами.", "empty.hiddenStock": " Приховано штатних: {n}.",
+ "th.name": "Назва", "th.vendor": "Виробник", "th.format": "Формат", "th.size": "Розмір",
+ "th.date": "Встановлено", "th.source": "Звідки", "th.lic": "Ліцензія",
+ "fi.copy": "копіювати", "fi.installed": "Встановлено: {d} ({src})",
+ "fi.created": "Файл створено: {c} · останній скан: {s}", "fi.source": "Звідки: {s}",
+ "fi.bundle": "ID пакета: {id}", "fi.pkg": "Інсталятор: {id}",
+ "dr.mixed": "У файлів були різні значення, тут показано всі. Після збереження значення стане спільним.",
+ "dr.licNone": "Автоматично нічого не знайдено — впишіть вручну нижче.", "dr.close": "Закрити",
+ "dr.size": "Розмір", "dr.platform": "Платформа", "dr.category": "Категорія", "dr.components": "Плагіни у файлі",
+ "dr.installed": "Встановлено",
+ "dr.migrated": "Ця дата раніша, ніж цей Mac було налаштовано{setup}. Імовірно, плагін перенесено зі старого комп'ютера, а не встановлено тут.",
+ "dr.firstSeen": "Вперше побачено", "dr.whyStock": "Чому штатний", "dr.stockManual": "позначено вручну",
+ "dr.files": "Файли", "dr.file": "Файл", "dr.licAuto": "Ліцензія (автоматично)", "dr.manual": "Вручну",
+ "dr.shared": "Ці поля спільні для всіх файлів продукту.",
+ "dr.vendor": "Виробник (якщо визначився неправильно)", "dr.source": "Звідки скачана",
+ "dr.source.ph": "сайт, магазин, лінк на обліковий запис…", "dr.auto": "Авто: {v}", "dr.notDetected": "не визначено",
+ "dr.lic": "Ліцензія: де подивитись", "dr.lic.ph": "Напр.: Waves Central → Licenses; або лист на пошті від ...",
+ "dr.desc": "Короткий опис", "dr.notes": "Нотатки", "dr.stockQ": "Штатний плагін?",
+ "dr.stockAuto": "Авто ({v})", "dr.isStock": "штатний", "dr.notStock": "не штатний",
+ "dr.stockYes": "Так — ховати", "dr.stockNo": "Ні — показувати", "dr.save": "Зберегти",
+ "toast.noChanges": "Змін немає", "toast.saved": "Збережено", "toast.error": "Помилка: {e}", "toast.copied": "Шлях скопійовано",
+ "toast.schedOn": "Автоскан увімкнено", "toast.schedOff": "Автоскан вимкнено",
+ "phase.search": "Пошук", "st.found": "знайдено {n}", "st.last": "Останній скан: {d}", "st.never": "Ще не скановано",
+ "st.done": "Готово, файлів: нових {n}, оновлено {u}, видалено {r}", "st.doneShort": "Готово",
+ "kind.new": "нове", "kind.updated": "оновлено", "kind.removed": "видалено", "kind.moved": "переміщено", "kind.returned": "повернулось",
+ "trigger.manual": "вручну", "trigger.weekly": "щотижня", "trigger.first-run": "перший запуск",
+ "h.full": "весь диск", "h.standard": "стандартні теки",
+ "h.counts": "нових: {n} · оновлень: {u} · видалено: {r}", "h.warnings": "Попередження ({n})", "h.empty": "Скани ще не запускались.",
+ "set.lang": "Мова інтерфейсу", "lang.uk": "Українська", "lang.en": "English",
+ "set.lang.hint": "Спершу береться мова macOS, далі діє ваш вибір.",
+ "set.what": "Що сканувати", "set.standard": "Стандартні теки плагінів (швидко, секунди)",
+ "set.full": "Весь диск (знаходить нестандартні та не-macOS плагіни; кілька хвилин)",
+ "set.modeHint": "Цей режим використовується кнопкою «Сканувати» та тижневим автоскануванням.",
+ "set.weekly": "Автоскан раз на тиждень", "set.status": "Статус:", "set.on": "увімкнено", "set.notLoaded": "файл є, але не завантажено",
+ "set.off": "вимкнено", "set.when": "(понеділок, ~11:07; якщо комп'ютер був вимкнений — запуститься після увімкнення)",
+ "set.reinstall": "Перевстановити", "set.enable": "Увімкнути", "set.disable": "Вимкнути",
+ "set.fda": "Щоб фоновий скан бачив усі теки, може знадобитись дозвіл «Повний доступ до диска» для python3 (Системні налаштування → Конфіденційність і безпека).",
+ "set.macOnly": "Доступно лише на macOS.", "set.rules": "Правила й дані", "set.dataDir": "Тека даних: {d}",
+ "set.rulesText": "Штатні плагіни: {a} · шляхи ліцензій: {b} · назви виробників: {c} — відредагуйте ці файли й просканьте знову.",
+ "set.version": "Версія {v}", "set.quit": "Вимкнути застосунок",
+ "quit.confirm": "Вимкнути Plugius? Дані збережуться.", "quit.done": "Plugius вимкнено. Закрийте цю вкладку.",
+ "err.connect": "Не вдалось підключитись до Plugius: {e}"
+},
+"en": {
+ "app.title": "Plugius — plugin catalog",
+ "btn.stop": "Stop", "btn.scan": "Scan", "disk.aria": "What takes up disk space",
+ "tab.plugins": "Plugins", "tab.history": "Change history", "tab.settings": "Settings",
+ "q.ph": "Search: name, vendor, path", "q.aria": "Search", "fmt.label": "Products by format:",
+ "plat.all": "All platforms", "vend.all": "All vendors",
+ "f.group": "By vendor", "f.stock": "Bundled app plugins",
+ "f.stock.title": "Plugins installed together with apps such as Logic Pro or Pro Tools",
+ "f.nolic": "No license", "f.gone": "Removed from disk", "f.foreign": "Non-macOS only",
+ "units": "B KB MB GB",
+ "pl.product": ["product", "products"], "pl.file": ["file", "files"],
+ "pl.vendor": ["vendor", "vendors"], "pl.folder": ["folder", "folders"],
+ "lic.manual": "Recorded", "lic.file": "File found", "lic.none": "Not found",
+ "src.none": "Unknown", "src.probablyPrefix": "Probably", "src.probably": "Probably installer",
+ "src.pkgPrefix": "Installed by package", "src.pkg": "Installer",
+ "plat.universalPrefix": "Universal", "vendor.guessMark": "guess",
+ "migrated": "moved?", "migrated.title": "The file date is earlier than this Mac's setup: probably moved from an old computer",
+ "tag.new": "new", "tag.newFmt": "new: {f}", "tag.newFmt.title": "Only this format is new, the product's other files were already here",
+ "tag.foreign.title": "Doesn't run on macOS", "tag.stock": "stock",
+ "disk.less1": "under 1%", "disk.more": "{n} more",
+ "tw.expand": "Show files", "tw.collapse": "Hide files", "tw.title": "Show files",
+ "vendor.guessed": "Vendor guessed: {src}",
+ "file.label": "File: {name}", "file.gone": "file missing", "file.new": "new", "btn.finder": "Show in Finder",
+ "chip.title": "{n} have a {f} file",
+ "newbar": "● New since scan: {p}, {f}", "newbar.ack": "Mark as seen",
+ "stat.disk": "on disk", "stat.check": "check license",
+ "empty.catalog": "The catalog is empty. Press “Scan” to find plugins.",
+ "empty.filter": "Nothing matches these filters.", "empty.hiddenStock": " Hidden stock plugins: {n}.",
+ "th.name": "Name", "th.vendor": "Vendor", "th.format": "Format", "th.size": "Size",
+ "th.date": "Installed", "th.source": "Source", "th.lic": "License",
+ "fi.copy": "copy", "fi.installed": "Installed: {d} ({src})",
+ "fi.created": "File created: {c} · last scan: {s}", "fi.source": "Source: {s}",
+ "fi.bundle": "Bundle ID: {id}", "fi.pkg": "Installer package: {id}",
+ "dr.mixed": "The files had different values; all of them are shown here. After saving, the value becomes shared.",
+ "dr.licNone": "Nothing found automatically — enter it manually below.", "dr.close": "Close",
+ "dr.size": "Size", "dr.platform": "Platform", "dr.category": "Category", "dr.components": "Plugins in the file",
+ "dr.installed": "Installed",
+ "dr.migrated": "This date is earlier than this Mac's setup{setup}. The plugin was probably moved from an old computer rather than installed here.",
+ "dr.firstSeen": "First seen", "dr.whyStock": "Why stock", "dr.stockManual": "marked manually",
+ "dr.files": "Files", "dr.file": "File", "dr.licAuto": "License (automatic)", "dr.manual": "Manual",
+ "dr.shared": "These fields are shared by all files of the product.",
+ "dr.vendor": "Vendor (if detected wrongly)", "dr.source": "Downloaded from",
+ "dr.source.ph": "website, store, account link…", "dr.auto": "Auto: {v}", "dr.notDetected": "not detected",
+ "dr.lic": "License: where to look", "dr.lic.ph": "E.g.: Waves Central → Licenses; or an email from ...",
+ "dr.desc": "Short description", "dr.notes": "Notes", "dr.stockQ": "Stock plugin?",
+ "dr.stockAuto": "Auto ({v})", "dr.isStock": "stock", "dr.notStock": "not stock",
+ "dr.stockYes": "Yes — hide", "dr.stockNo": "No — show", "dr.save": "Save",
+ "toast.noChanges": "No changes", "toast.saved": "Saved", "toast.error": "Error: {e}", "toast.copied": "Path copied",
+ "toast.schedOn": "Weekly scan on", "toast.schedOff": "Weekly scan off",
+ "phase.search": "Searching", "st.found": "found {n}", "st.last": "Last scan: {d}", "st.never": "Not scanned yet",
+ "st.done": "Done, files: {n} new, {u} updated, {r} removed", "st.doneShort": "Done",
+ "kind.new": "new", "kind.updated": "updated", "kind.removed": "removed", "kind.moved": "moved", "kind.returned": "returned",
+ "trigger.manual": "manual", "trigger.weekly": "weekly", "trigger.first-run": "first run",
+ "h.full": "whole disk", "h.standard": "standard folders",
+ "h.counts": "new: {n} · updated: {u} · removed: {r}", "h.warnings": "Warnings ({n})", "h.empty": "No scans yet.",
+ "set.lang": "Interface language", "lang.uk": "Ukrainian", "lang.en": "English",
+ "set.lang.hint": "The macOS language is used first, then your choice.",
+ "set.what": "What to scan", "set.standard": "Standard plugin folders (fast, seconds)",
+ "set.full": "Whole disk (finds non-standard and non-macOS plugins; a few minutes)",
+ "set.modeHint": "This mode is used by the “Scan” button and by the weekly scan.",
+ "set.weekly": "Weekly scan", "set.status": "Status:", "set.on": "on", "set.notLoaded": "file exists but isn't loaded",
+ "set.off": "off", "set.when": "(Monday, ~11:07; if the computer was off, it runs once it starts)",
+ "set.reinstall": "Reinstall", "set.enable": "Turn on", "set.disable": "Turn off",
+ "set.fda": "For the background scan to see every folder, python3 may need “Full Disk Access” (System Settings → Privacy & Security).",
+ "set.macOnly": "Available only on macOS.", "set.rules": "Rules and data", "set.dataDir": "Data folder: {d}",
+ "set.rulesText": "Stock plugins: {a} · license paths: {b} · vendor names: {c} — edit these files and scan again.",
+ "set.version": "Version {v}", "set.quit": "Quit the app",
+ "quit.confirm": "Quit Plugius? Your data will be kept.", "quit.done": "Plugius has quit. Close this tab.",
+ "err.connect": "Couldn't connect to Plugius: {e}"
+}
+}
+</script>
 <script>
 "use strict";
 const $ = (s, r=document) => r.querySelector(s);
 const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+// Мова: спершу вибір у налаштуваннях, інакше мова macOS (WKWebView бере її з системи); не українська — англійська
+const I18N = JSON.parse($("#i18n").textContent);
+function pickLang() {
+  try { const v = localStorage.getItem("plugius.lang"); if (v in I18N) return v; } catch (e) {}
+  // У застосунку оболонка передає мову macOS сама: navigator.language у WKWebView може від неї відрізнятись
+  return /^uk\b/i.test(window.plugiusSystemLang || navigator.language || "") ? "uk" : "en";
+}
+const LANG = pickLang(), LOCALE = LANG === "en" ? "en-US" : "uk-UA";
+const sub = (s, vars) => s.replace(/\{(\w+)\}/g, (m, k) => vars && k in vars ? vars[k] : m);
+const t = (k, vars) => { const v = I18N[LANG][k]; return v == null ? k : sub(v, vars); };
+// Те саме для HTML: шаблон екранується, вставки вже мають бути безпечним HTML
+const th = (k, vars) => { const v = I18N[LANG][k]; return v == null ? esc(k) : sub(esc(v), vars); };
+// Множина: українська має три форми, англійська дві
+const tn = (k, n) => {
+  const f = I18N[LANG][k], m = n % 100, u = n % 10;
+  if (LANG === "en") return n + " " + f[n === 1 ? 0 : 1];
+  return n + " " + f[m > 10 && m < 20 ? 2 : u === 1 ? 0 : u >= 2 && u <= 4 ? 1 : 2];
+};
+// Мова йде в кожен запит, щоб сервер перекладав свої фрази
+const withLang = path => path + (path.includes("?") ? "&" : "?") + "lang=" + LANG;
+function applyStatic() {
+  document.documentElement.lang = LANG; document.title = t("app.title");
+  document.querySelectorAll("[data-i18n]").forEach(el => el.textContent = t(el.dataset.i18n));
+  document.querySelectorAll("[data-i18n-ph]").forEach(el => el.placeholder = t(el.dataset.i18nPh));
+  document.querySelectorAll("[data-i18n-aria]").forEach(el => el.setAttribute("aria-label", t(el.dataset.i18nAria)));
+  document.querySelectorAll("[data-i18n-title]").forEach(el => el.title = t(el.dataset.i18nTitle));
+  $("#csvLink").href = withLang("/api/export.csv");
+}
+applyStatic();
+
 const S = {newOnly: false, all: [], sort: "name", dir: 1, q: "", fmt: new Set(), plat: "", vend: "", stock: false, nolic: false, gone: false, foreign: false, open: null, status: {}, expanded: new Set(), group: true};
 try { S.group = localStorage.getItem("plugius.group") !== "0"; } catch (e) {}
 
@@ -234,7 +409,7 @@ async function api(path, opt) {
   const o = Object.assign({headers: {}}, opt || {});
   if (o.body && typeof o.body !== "string") { o.body = JSON.stringify(o.body); }
   if (o.body) o.headers["Content-Type"] = "application/json";
-  const r = await fetch(path, o);
+  const r = await fetch(withLang(path), o);
   let j = null; try { j = await r.json(); } catch (e) {}
   if (!r.ok && !(j && "started" in j)) throw new Error((j && j.error) || r.statusText);
   return j;
@@ -243,41 +418,41 @@ function toast(msg) { const t = $("#toast"); t.textContent = msg; t.style.displa
 
 function fmtSize(b) {
   if (!b) return "—";
-  const u = ["Б","КБ","МБ","ГБ"]; let i = 0, v = b;
+  const u = t("units").split(" "); let i = 0, v = b;
   while (v >= 1024 && i < 3) { v /= 1024; i++; }
   return (i ? v.toFixed(v < 10 ? 1 : 0) : v) + " " + u[i];
 }
-function fmtDate(s) { if (!s) return "—"; const d = new Date(s); return isNaN(d) ? s : d.toLocaleDateString("uk-UA", {year:"numeric", month:"short", day:"numeric"}); }
-function fmtDT(s) { if (!s) return "—"; const d = new Date(s); return isNaN(d) ? s : d.toLocaleString("uk-UA", {dateStyle:"medium", timeStyle:"short"}); }
-const plural = (n, a, b, c) => { const t = n % 100, u = n % 10; return n + " " + (t > 10 && t < 20 ? c : u === 1 ? a : u >= 2 && u <= 4 ? b : c); };
-const nProducts = n => plural(n, "продукт", "продукти", "продуктів");
-const nFiles = n => plural(n, "файл", "файли", "файлів");
+function fmtDate(s) { if (!s) return "—"; const d = new Date(s); return isNaN(d) ? s : d.toLocaleDateString(LOCALE, {year:"numeric", month:"short", day:"numeric"}); }
+function fmtDT(s) { if (!s) return "—"; const d = new Date(s); return isNaN(d) ? s : d.toLocaleString(LOCALE, {dateStyle:"medium", timeStyle:"short"}); }
+const nProducts = n => tn("pl.product", n);
+const nFiles = n => tn("pl.file", n);
 const uniq = a => [...new Set(a)];
 // Файли продукту, які показує рядок: звичайно наявні, у режимі «Видалені» лише зниклі
 const viewFiles = p => p.files.filter(f => S.gone ? !f.present : f.present);
 const viewSize = p => viewFiles(p).reduce((s, f) => s + (f.size_bytes || 0), 0);
-const isForeign = p => !!p.platform && p.platform !== "macOS" && !/^Універсально/.test(p.platform);
+// Платформу сервер віддає мовою інтерфейсу
+const isForeign = p => !!p.platform && p.platform !== "macOS" && !p.platform.startsWith(t("plat.universalPrefix"));
 
 function licCell(p) {
   const cell = (cls, text, full) => `<span class="lic ${cls}" title="${esc(full || text)}"><i></i>${esc(text)}</span>`;
-  if (p.license_manual) return cell("lic-manual", "Записано", p.license_manual);
+  if (p.license_manual) return cell("lic-manual", t("lic.manual"), p.license_manual);
   const auto = p.license_auto.filter(x => x.kind !== "guess"), guess = p.license_auto.find(x => x.kind === "guess");
   const shortOf = x => x.short || x.label;
   const f = auto.find(x => x.paths && x.paths.length), free = auto.find(x => x.kind === "free");
-  if (f) return cell("lic-file", "Файл знайдено", f.paths[0]);
+  if (f) return cell("lic-file", t("lic.file"), f.paths[0]);
   if (free) return cell("lic-file", shortOf(free), free.text);
   if (auto.length) return cell("lic-hint", shortOf(auto[0]), auto[0].text);
   if (guess) return cell("lic-hint", shortOf(guess), guess.paths[0]);
-  return cell("lic-none", "Не знайдено");
+  return cell("lic-none", t("lic.none"));
 }
 
 function sourceShort(p) {
   if (p.source_manual) return p.source_manual.slice(0, 40);
   const s = p.source_auto || "";
-  if (!s) return "Не визначено";
+  if (!s) return t("src.none");
   if (/^https?:/i.test(s)) { try { return new URL(s).hostname.replace(/^www\./, ""); } catch (e) {} }
-  if (/^Імовірно/.test(s)) return "Імовірно інсталятор";
-  if (/^Встановлено пакетом/.test(s)) return "Інсталятор";
+  if (s.startsWith(t("src.probablyPrefix"))) return t("src.probably");
+  if (s.startsWith(t("src.pkgPrefix"))) return t("src.pkg");
   return s.slice(0, 40);
 }
 
@@ -313,12 +488,12 @@ function filtered() {
   return [...groups.entries()].sort((a, b) => (b[1].some(p => p.is_new) - a[1].some(p => p.is_new)) || order(a, b)).flatMap(e => e[1]);
 }
 
-const migratedNote = '<div class="sub" title="Дата файлу раніша, ніж цей Mac було налаштовано: імовірно, перенесено зі старого комп\'ютера">перенесено?</div>';
+const migratedNote = `<div class="sub" title="${th("migrated.title")}">${th("migrated")}</div>`;
 
 function newTag(p) {
   if (!p.new_count) return "";
-  if (p.new_count === p.file_count) return ' <span class="tag new">нове</span>';
-  return ` <span class="tag new" title="Новий лише цей формат, решта файлів продукту вже були">нове: ${esc(p.new_formats.join(", "))}</span>`;
+  if (p.new_count === p.file_count) return ` <span class="tag new">${th("tag.new")}</span>`;
+  return ` <span class="tag new" title="${th("tag.newFmt.title")}">${th("tag.newFmt", {f: esc(p.new_formats.join(", "))})}</span>`;
 }
 
 function formatTags(p) {
@@ -327,7 +502,7 @@ function formatTags(p) {
     const same = vf.filter(f => f.format === fm);
     return `<span class="tag ${p.new_formats.includes(fm) ? "isnewfmt" : ""}">${esc(fm)}${same.some(f => f.confidence === "low") ? "?" : ""}${same.length > 1 ? " ×" + same.length : ""}</span>`;
   }).join("");
-  const foreign = uniq(vf.filter(isForeign).map(f => f.platform)).map(pl => `<span class="tag foreign" title="Не працює на macOS">${esc(pl)}</span>`).join("");
+  const foreign = uniq(vf.filter(isForeign).map(f => f.platform)).map(pl => `<span class="tag foreign" title="${th("tag.foreign.title")}">${esc(pl)}</span>`).join("");
   return tags + foreign;
 }
 
@@ -343,10 +518,10 @@ function diskStrip(rows) {
   const items = [...byVendor.values()].filter(x => x.size).sort((a, b) => b.size - a.size);
   const total = items.reduce((s, x) => s + x.size, 0);
   if (!total) return "";
-  const pct = v => { const n = v / total * 100; return n < 1 ? "менше 1%" : Math.round(n) + "%"; };
+  const pct = v => { const n = v / total * 100; return n < 1 ? t("disk.less1") : Math.round(n) + "%"; };
   const top = items.slice(0, DISK_COLORS.length).map((x, i) => Object.assign({color: DISK_COLORS[i], label: x.name}, x));
   const rest = items.slice(DISK_COLORS.length);
-  if (rest.length) top.push({color: DISK_REST, label: "Ще " + plural(rest.length, "виробник", "виробники", "виробників"), name: rest.map(x => x.name).join(", "), size: rest.reduce((s, x) => s + x.size, 0)});
+  if (rest.length) top.push({color: DISK_REST, label: t("disk.more", {n: tn("pl.vendor", rest.length)}), name: rest.map(x => x.name).join(", "), size: rest.reduce((s, x) => s + x.size, 0)});
   const segs = top.map(x => `<span title="${esc(x.name)} · ${fmtSize(x.size)} · ${pct(x.size)}" style="flex:${x.size} 1 0;background:${x.color}"></span>`).join("");
   const legend = top.map(x => `<span title="${esc(x.name)} · ${pct(x.size)}"><i style="background:${x.color}"></i>${esc(x.label)} <b>${fmtSize(x.size)}</b></span>`).join("");
   return `<div class="segs">${segs}</div><div class="legend">${legend}</div>`;
@@ -355,10 +530,11 @@ function diskStrip(rows) {
 function productRow(p, maxSize) {
   const vf = viewFiles(p), many = p.files.length > 1, open = S.expanded.has(p.id), size = viewSize(p);
   const info = [nFiles(vf.length), p.category, p.versions.length ? "v" + p.versions.join(", ") : ""].filter(Boolean).join(" · ");
-  const tw = many ? `<button class="tw ${open ? "open" : ""}" data-tw="${p.id}" aria-expanded="${open}" aria-label="${open ? "Згорнути" : "Розгорнути"} файли" title="Показати файли">▶</button>` : "";
-  const vendor = S.group ? "" : `<td><span class="vendor">${esc(p.vendor_eff)}</span>${p.vendor_manual ? "" : (p.vendor_src && /припущ/.test(p.vendor_src) ? '&nbsp;<span class="sub" title="Виробника вгадано: ' + esc(p.vendor_src) + '">?</span>' : "")}</td>`;
+  const tw = many ? `<button class="tw ${open ? "open" : ""}" data-tw="${p.id}" aria-expanded="${open}" aria-label="${th(open ? "tw.collapse" : "tw.expand")}" title="${th("tw.title")}">▶</button>` : "";
+  const guessed = !p.vendor_manual && p.vendor_src && p.vendor_src.includes(t("vendor.guessMark"));
+  const vendor = S.group ? "" : `<td><span class="vendor">${esc(p.vendor_eff)}</span>${guessed ? '&nbsp;<span class="sub" title="' + th("vendor.guessed", {src: esc(p.vendor_src)}) + '">?</span>' : ""}</td>`;
   let html = `<tr class="row ${vf.length ? "" : "gone"} ${p.is_new ? "isnew" : ""}" data-id="${p.id}">
-    <td><div class="name">${tw}${esc(p.name)}${newTag(p)}${p.stock ? ' <span class="tag stock">штатний</span>' : ""}</div><div class="sub">${esc(info)}</div></td>
+    <td><div class="name">${tw}${esc(p.name)}${newTag(p)}${p.stock ? ` <span class="tag stock">${th("tag.stock")}</span>` : ""}</div><div class="sub">${esc(info)}</div></td>
     ${vendor}
     <td style="white-space:nowrap">${formatTags(p)}</td>
     <td class="num">${fmtSize(size)}<span class="szbar"><i style="width:${Math.max(1.5, maxSize ? size / maxSize * 100 : 0).toFixed(1)}%"></i></span></td>
@@ -367,12 +543,12 @@ function productRow(p, maxSize) {
     <td>${licCell(p)}</td></tr>`;
   const fc = h => `<div class="fc"><div><div>${h}</div></div></div>`;
   if (many) html += p.files.map(f => `<tr class="file ${open ? "open" : ""} ${f.present ? "" : "gone"} ${f.is_new && f.present ? "isnew" : ""}" data-p="${p.id}">
-    <td colspan="${S.group ? 1 : 2}">${fc(`<div class="sub path">${esc(f.path)}</div>${f.name !== p.name ? `<div class="sub">Файл: ${esc(f.name)}</div>` : ""}`)}</td>
-    <td>${fc(`<span class="tag ${f.is_new && f.present ? "isnewfmt" : ""}">${esc(f.format)}</span>${isForeign(f) ? `<span class="tag foreign">${esc(f.platform)}</span>` : ""}${f.present ? "" : '<div class="sub k-removed">файл зник</div>'}${f.is_new && f.present ? '<div class="sub k-new-file">новий</div>' : ""}`)}</td>
+    <td colspan="${S.group ? 1 : 2}">${fc(`<div class="sub path">${esc(f.path)}</div>${f.name !== p.name ? `<div class="sub">${th("file.label", {name: esc(f.name)})}</div>` : ""}`)}</td>
+    <td>${fc(`<span class="tag ${f.is_new && f.present ? "isnewfmt" : ""}">${esc(f.format)}</span>${isForeign(f) ? `<span class="tag foreign">${esc(f.platform)}</span>` : ""}${f.present ? "" : `<div class="sub k-removed">${th("file.gone")}</div>`}${f.is_new && f.present ? `<div class="sub k-new-file">${th("file.new")}</div>` : ""}`)}</td>
     <td class="num">${fc(fmtSize(f.size_bytes))}</td>
     <td style="white-space:nowrap">${fc(fmtDate(f.installed_at) + (f.installed_flag === "migrated" ? migratedNote : ""))}</td>
     <td class="sub">${fc(f.version ? "v" + esc(f.version) : "—")}</td>
-    <td>${fc(f.present ? `<button class="mini" data-reveal="${f.id}">У Finder</button>` : "")}</td></tr>`).join("");
+    <td>${fc(f.present ? `<button class="mini" data-reveal="${f.id}">${th("btn.finder")}</button>` : "")}</td></tr>`).join("");
   return html;
 }
 
@@ -395,31 +571,31 @@ function render() {
   const visible = S.all.filter(p => p.present && (S.stock || !p.stock));
   const fmts = {};
   visible.forEach(p => uniq(p.files.filter(f => f.present).map(f => f.format)).forEach(f => fmts[f] = (fmts[f] || 0) + 1));
-  $("#fmtChips").innerHTML = Object.keys(fmts).sort().map(f => `<span class="chip ${S.fmt.has(f) ? "on" : ""}" data-f="${esc(f)}" title="${esc(nProducts(fmts[f]))} мають файл ${esc(f)}">${esc(f)} · ${fmts[f]}</span>`).join("");
+  $("#fmtChips").innerHTML = Object.keys(fmts).sort().map(f => `<span class="chip ${S.fmt.has(f) ? "on" : ""}" data-f="${esc(f)}" title="${th("chip.title", {n: esc(nProducts(fmts[f])), f: esc(f)})}">${esc(f)} · ${fmts[f]}</span>`).join("");
   $("#fmtLabel").style.display = Object.keys(fmts).length ? "" : "none";
   const plats = uniq(S.all.flatMap(p => p.files.map(f => f.platform)).filter(Boolean)).sort();
-  fill($("#platSel"), plats, S.plat, "Усі платформи");
+  fill($("#platSel"), plats, S.plat, t("plat.all"));
   const vends = uniq(S.all.filter(p => S.stock || !p.stock).map(p => p.vendor_eff)).sort((a, b) => a.localeCompare(b));
-  fill($("#vendSel"), vends, S.vend, "Усі виробники");
+  fill($("#vendSel"), vends, S.vend, t("vend.all"));
   const newp = visible.filter(p => p.is_new), nNew = newp.reduce((s, p) => s + p.new_count, 0);
-  $("#newBar").innerHTML = newp.length ? `● Нове після сканування: ${nProducts(newp.length)}, ${nFiles(nNew)} <button id="ackNew">Позначити переглянутими</button>` : "";
+  $("#newBar").innerHTML = newp.length ? `${th("newbar", {p: esc(nProducts(newp.length)), f: esc(nFiles(nNew))})} <button id="ackNew">${th("newbar.ack")}</button>` : "";
   const nf = rows.reduce((s, p) => s + viewFiles(p).length, 0), total = rows.reduce((s, p) => s + viewSize(p), 0);
   const stat = (t, sig) => { const i = t.indexOf(" "); return `<div class="stat ${sig ? "sig" : ""}"><b>${esc(t.slice(0, i))}</b><span>${esc(t.slice(i + 1))}</span></div>`; };
   const nCheck = rows.filter(p => p.license_state === "hint" || p.license_state === "none").length;
-  $("#stats").innerHTML = stat(nProducts(rows.length)) + stat(nFiles(nf)) + (total ? `<div class="stat"><b>${fmtSize(total)}</b><span>на диску</span></div>` : "") + `<div class="stat ${nCheck ? "sig" : ""}"><b>${nCheck}</b><span>перевірити ліцензію</span></div>`;
+  $("#stats").innerHTML = stat(nProducts(rows.length)) + stat(nFiles(nf)) + (total ? `<div class="stat"><b>${fmtSize(total)}</b><span>${th("stat.disk")}</span></div>` : "") + `<div class="stat ${nCheck ? "sig" : ""}"><b>${nCheck}</b><span>${th("stat.check")}</span></div>`;
   $("#disk").innerHTML = diskStrip(rows);
   const hiddenStock = S.all.filter(p => p.present && p.stock).length;
   if (!S.all.length) {
-    $("#tableWrap").innerHTML = `<div class="empty">Каталог порожній. Натисніть «Сканувати», щоб знайти плагіни.</div>`;
+    $("#tableWrap").innerHTML = `<div class="empty">${th("empty.catalog")}</div>`;
     return;
   }
-  if (!rows.length) { $("#tableWrap").innerHTML = `<div class="empty">Нічого не знайдено за цими фільтрами.${hiddenStock && !S.stock ? ` Приховано штатних: ${hiddenStock}.` : ""}</div>`; return; }
-  const th = (k, t, cls) => `<th data-s="${k}" class="${cls||""}">${t}${S.sort === k ? (S.dir > 0 ? " ▲" : " ▼") : ""}</th>`;
-  $("#tableWrap").innerHTML = `<div class="frame"><table><thead><tr>${th("name","Назва")}${S.group ? "" : th("vendor","Виробник")}${th("format","Формат")}${th("size","Розмір","num")}${th("date","Встановлено")}${th("source","Звідки")}${th("lic","Ліцензія")}</tr></thead><tbody class="gap"><tr><td colspan="${S.group ? 6 : 7}"></td></tr></tbody>` +
+  if (!rows.length) { $("#tableWrap").innerHTML = `<div class="empty">${th("empty.filter")}${hiddenStock && !S.stock ? th("empty.hiddenStock", {n: hiddenStock}) : ""}</div>`; return; }
+  const hd = (k, label, cls) => `<th data-s="${k}" class="${cls||""}">${th(label)}${S.sort === k ? (S.dir > 0 ? " ▲" : " ▼") : ""}</th>`;
+  $("#tableWrap").innerHTML = `<div class="frame"><table><thead><tr>${hd("name","th.name")}${S.group ? "" : hd("vendor","th.vendor")}${hd("format","th.format")}${hd("size","th.size","num")}${hd("date","th.date")}${hd("source","th.source")}${hd("lic","th.lic")}</tr></thead><tbody class="gap"><tr><td colspan="${S.group ? 6 : 7}"></td></tr></tbody>` +
     tableBody(rows) + `</table></div>`;
 }
 function fill(sel, vals, cur, all) {
-  const h = `<option value="">${all}</option>` + vals.map(v => `<option ${v === cur ? "selected" : ""} value="${esc(v)}">${esc(v)}</option>`).join("");
+  const h = `<option value="">${esc(all)}</option>` + vals.map(v => `<option ${v === cur ? "selected" : ""} value="${esc(v)}">${esc(v)}</option>`).join("");
   if (sel.innerHTML !== h) sel.innerHTML = h;
 }
 
@@ -427,13 +603,13 @@ const fileById = id => { for (const p of S.all) { const f = p.files.find(x => x.
 function clearNew(p) { p.is_new = 0; p.new_count = 0; p.new_formats = []; p.files.forEach(f => f.is_new = 0); }
 
 function fileItem(f) {
-  return `<div class="fileitem"><span class="tag">${esc(f.format)}</span>${f.version ? `<span class="sub">v${esc(f.version)} · </span>` : ""}<span class="sub">${fmtSize(f.size_bytes)}${f.platform ? " · " + esc(f.platform) : ""}${f.arch ? " · " + esc(f.arch) : ""}</span>${f.present ? "" : ' <span class="k-removed">файл зник</span>'}${f.stock ? ' <span class="tag stock">штатний</span>' : ""}
-    <div style="margin-top:4px"><code>${esc(f.path)}</code> <span class="copy" data-copy="${f.id}">копіювати</span>${f.present ? ` <button class="mini" data-reveal="${f.id}">У Finder</button>` : ""}</div>
-    <div class="sub">Встановлено: ${fmtDT(f.installed_at)} (${esc(f.installed_src || "")})${f.installed_flag === "migrated" ? " · перенесено?" : ""}</div>
-    <div class="sub">Файл створено: ${fmtDT(f.file_created_at)} · останній скан: ${fmtDT(f.last_seen)}</div>
-    ${f.source_auto ? `<div class="sub">Звідки: ${esc(f.source_auto)}</div>` : ""}
-    ${f.bundle_id ? `<div class="sub">ID пакета: <code>${esc(f.bundle_id)}</code></div>` : ""}
-    ${f.pkg_id ? `<div class="sub">Інсталятор: <code>${esc(f.pkg_id)}</code></div>` : ""}</div>`;
+  return `<div class="fileitem"><span class="tag">${esc(f.format)}</span>${f.version ? `<span class="sub">v${esc(f.version)} · </span>` : ""}<span class="sub">${fmtSize(f.size_bytes)}${f.platform ? " · " + esc(f.platform) : ""}${f.arch ? " · " + esc(f.arch) : ""}</span>${f.present ? "" : ` <span class="k-removed">${th("file.gone")}</span>`}${f.stock ? ` <span class="tag stock">${th("tag.stock")}</span>` : ""}
+    <div style="margin-top:4px"><code>${esc(f.path)}</code> <span class="copy" data-copy="${f.id}">${th("fi.copy")}</span>${f.present ? ` <button class="mini" data-reveal="${f.id}">${th("btn.finder")}</button>` : ""}</div>
+    <div class="sub">${th("fi.installed", {d: esc(fmtDT(f.installed_at)), src: esc(f.installed_src || "")})}${f.installed_flag === "migrated" ? " · " + th("migrated") : ""}</div>
+    <div class="sub">${th("fi.created", {c: esc(fmtDT(f.file_created_at)), s: esc(fmtDT(f.last_seen))})}</div>
+    ${f.source_auto ? `<div class="sub">${th("fi.source", {s: esc(f.source_auto)})}</div>` : ""}
+    ${f.bundle_id ? `<div class="sub">${th("fi.bundle", {id: "<code>" + esc(f.bundle_id) + "</code>"})}</div>` : ""}
+    ${f.pkg_id ? `<div class="sub">${th("fi.pkg", {id: "<code>" + esc(f.pkg_id) + "</code>"})}</div>` : ""}</div>`;
 }
 
 function openDrawer(id, keepScroll) {
@@ -441,31 +617,32 @@ function openDrawer(id, keepScroll) {
   S.open = id;
   if (p.is_new) { clearNew(p); api("/api/products/" + id, {method: "PATCH", body: {is_new: 0}}).catch(() => {}); setTimeout(render, 0); }
   const many = p.files.length > 1;
-  const mix = k => p.manual_mixed.includes(k) ? `<div class="hint">У файлів були різні значення, тут показано всі. Після збереження значення стане спільним.</div>` : "";
+  const mix = k => p.manual_mixed.includes(k) ? `<div class="hint">${th("dr.mixed")}</div>` : "";
   const lic = p.license_auto.map(x => `<div style="margin-bottom:8px"><b>${esc(x.label)}</b><div class="sub">${esc(x.text)}</div>` +
-    (x.paths || []).map(pp => `<div class="sub"><code>${esc(pp)}</code></div>`).join("") + `</div>`).join("") || `<div class="sub">Автоматично нічого не знайдено — впишіть вручну нижче.</div>`;
+    (x.paths || []).map(pp => `<div class="sub"><code>${esc(pp)}</code></div>`).join("") + `</div>`).join("") || `<div class="sub">${th("dr.licNone")}</div>`;
+  const setup = S.status.mac_setup_at ? " (" + fmtDate(S.status.mac_setup_at) + ")" : "";
   $("#drawer").innerHTML = `
-    <div style="display:flex;justify-content:space-between;gap:8px"><div><h2>${esc(p.name)}</h2><div class="sub"><span class="vendor">${esc(p.vendor_eff)}</span> · ${esc(p.formats.join(", "))}${p.versions.length ? " · v" + esc(p.versions.join(", ")) : ""}</div></div><button id="dClose" aria-label="Закрити" title="Закрити"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg></button></div>
+    <div style="display:flex;justify-content:space-between;gap:8px"><div><h2>${esc(p.name)}</h2><div class="sub"><span class="vendor">${esc(p.vendor_eff)}</span> · ${esc(p.formats.join(", "))}${p.versions.length ? " · v" + esc(p.versions.join(", ")) : ""}</div></div><button id="dClose" aria-label="${th("dr.close")}" title="${th("dr.close")}"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" fill="none"/></svg></button></div>
     <div class="kv">
-      <div>Розмір</div><div>${fmtSize(p.size_bytes)}${many ? " · " + nFiles(p.file_count) : ""}</div>
-      <div>Платформа</div><div>${esc(p.platforms.join(", ") || "—")}</div>
-      <div>Категорія</div><div>${esc(p.category || "—")}</div>
-      ${p.au_components.length > 1 ? `<div>Плагіни у файлі</div><div>${esc(p.au_components.join(", "))}</div>` : ""}
-      <div>Встановлено</div><div>${fmtDT(p.installed_at)} <span class="sub">(${esc(p.installed_src || "")})</span>${p.installed_flag === "migrated" ? '<div class="k-updated">Ця дата раніша, ніж цей Mac було налаштовано' + (S.status.mac_setup_at ? " (" + fmtDate(S.status.mac_setup_at) + ")" : "") + ". Імовірно, плагін перенесено зі старого комп'ютера, а не встановлено тут.</div>" : ""}</div>
-      <div>Вперше побачено</div><div>${fmtDT(p.first_seen)}</div>
-      ${p.stock ? `<div>Чому штатний</div><div>${esc(p.stock_reason || "позначено вручну")}</div>` : ""}
+      <div>${th("dr.size")}</div><div>${fmtSize(p.size_bytes)}${many ? " · " + nFiles(p.file_count) : ""}</div>
+      <div>${th("dr.platform")}</div><div>${esc(p.platforms.join(", ") || "—")}</div>
+      <div>${th("dr.category")}</div><div>${esc(p.category || "—")}</div>
+      ${p.au_components.length > 1 ? `<div>${th("dr.components")}</div><div>${esc(p.au_components.join(", "))}</div>` : ""}
+      <div>${th("dr.installed")}</div><div>${fmtDT(p.installed_at)} <span class="sub">(${esc(p.installed_src || "")})</span>${p.installed_flag === "migrated" ? `<div class="k-updated">${th("dr.migrated", {setup: esc(setup)})}</div>` : ""}</div>
+      <div>${th("dr.firstSeen")}</div><div>${fmtDT(p.first_seen)}</div>
+      ${p.stock ? `<div>${th("dr.whyStock")}</div><div>${esc(p.stock_reason || t("dr.stockManual"))}</div>` : ""}
     </div>
-    <div class="panel"><h3>${many ? "Файли" : "Файл"}</h3>${p.files.map(fileItem).join("")}</div>
-    <div class="panel"><h3>Ліцензія (автоматично)</h3>${lic}</div>
-    <div class="panel"><h3>Вручну</h3>${many ? `<div class="hint">Ці поля спільні для всіх файлів продукту.</div>` : ""}
-    <div class="field"><label>Виробник (якщо визначився неправильно)</label><input type="text" id="fVendor" value="${esc(p.vendor_manual)}" placeholder="${esc(p.vendor || "")}">${mix("vendor_manual")}</div>
-    <div class="field"><label>Звідки скачана</label><input type="text" id="fSource" value="${esc(p.source_manual)}" placeholder="${esc(p.source_auto || "сайт, магазин, лінк на обліковий запис…")}"><div class="hint">Авто: ${esc(p.source_auto || "не визначено")}</div>${mix("source_manual")}</div>
-    <div class="field"><label>Ліцензія: де подивитись</label><textarea id="fLic" placeholder="Напр.: Waves Central → Licenses; або лист на пошті від ...">${esc(p.license_manual)}</textarea>${mix("license_manual")}</div>
-    <div class="field"><label>Короткий опис</label><textarea id="fDesc" placeholder="${esc(p.description_auto)}">${esc(p.description_manual)}</textarea><div class="hint">Авто: ${esc(p.description_auto)}</div>${mix("description_manual")}</div>
-    <div class="field"><label>Нотатки</label><textarea id="fNotes">${esc(p.notes)}</textarea>${mix("notes")}</div>
-    <div class="field"><label>Штатний плагін?</label><select id="fStockSel"><option value="">Авто (${p.is_stock ? "штатний" : "не штатний"})</option><option value="1">Так — ховати</option><option value="0">Ні — показувати</option></select></div>
+    <div class="panel"><h3>${th(many ? "dr.files" : "dr.file")}</h3>${p.files.map(fileItem).join("")}</div>
+    <div class="panel"><h3>${th("dr.licAuto")}</h3>${lic}</div>
+    <div class="panel"><h3>${th("dr.manual")}</h3>${many ? `<div class="hint">${th("dr.shared")}</div>` : ""}
+    <div class="field"><label>${th("dr.vendor")}</label><input type="text" id="fVendor" value="${esc(p.vendor_manual)}" placeholder="${esc(p.vendor || "")}">${mix("vendor_manual")}</div>
+    <div class="field"><label>${th("dr.source")}</label><input type="text" id="fSource" value="${esc(p.source_manual)}" placeholder="${esc(p.source_auto || t("dr.source.ph"))}"><div class="hint">${th("dr.auto", {v: esc(p.source_auto || t("dr.notDetected"))})}</div>${mix("source_manual")}</div>
+    <div class="field"><label>${th("dr.lic")}</label><textarea id="fLic" placeholder="${th("dr.lic.ph")}">${esc(p.license_manual)}</textarea>${mix("license_manual")}</div>
+    <div class="field"><label>${th("dr.desc")}</label><textarea id="fDesc" placeholder="${esc(p.description_auto)}">${esc(p.description_manual)}</textarea><div class="hint">${th("dr.auto", {v: esc(p.description_auto)})}</div>${mix("description_manual")}</div>
+    <div class="field"><label>${th("dr.notes")}</label><textarea id="fNotes">${esc(p.notes)}</textarea>${mix("notes")}</div>
+    <div class="field"><label>${th("dr.stockQ")}</label><select id="fStockSel"><option value="">${th("dr.stockAuto", {v: th(p.is_stock ? "dr.isStock" : "dr.notStock")})}</option><option value="1">${th("dr.stockYes")}</option><option value="0">${th("dr.stockNo")}</option></select></div>
     </div>
-    <div class="row-actions"><button class="primary" id="dSave">Зберегти</button></div>`;
+    <div class="row-actions"><button class="primary" id="dSave">${th("dr.save")}</button></div>`;
   const stockNow = p.stock_override === null || p.stock_override === undefined ? "" : String(p.stock_override);
   $("#fStockSel").value = stockNow;
   if (!keepScroll) $("#drawer").scrollTop = 0;
@@ -478,7 +655,7 @@ function openDrawer(id, keepScroll) {
       if ($(el).value !== (p[k] || "")) body[k] = $(el).value;
     const so = $("#fStockSel").value;
     if (so !== stockNow) body.stock_override = so === "" ? null : Number(so);
-    if (!Object.keys(body).length) return toast("Змін немає");
+    if (!Object.keys(body).length) return toast(t("toast.noChanges"));
     try {
       const fid = p.files[0].id, top = $("#drawer").scrollTop;
       await api("/api/products/" + p.id, {method: "PATCH", body});
@@ -486,8 +663,8 @@ function openDrawer(id, keepScroll) {
       // Після зміни виробника продукт може об'єднатись з іншим, тому шукаємо його за файлом
       const now = S.all.find(x => x.files.some(f => f.id === fid));
       if (now && S.open === id) { openDrawer(now.id, true); $("#drawer").scrollTop = top; }
-      toast("Збережено");
-    } catch (e) { toast("Помилка: " + e.message); }
+      toast(t("toast.saved"));
+    } catch (e) { toast(t("toast.error", {e: e.message})); }
   };
 }
 function closeDrawer() { S.open = null; $("#drawer").classList.remove("open"); $("#drawer").setAttribute("aria-hidden", "true"); }
@@ -499,44 +676,49 @@ async function refreshStatus(first) {
   $("#btnScan").style.display = st.running ? "none" : ""; $("#btnCancel").style.display = st.running ? "" : "none";
   const ss = $("#scanState");
   if (st.running) {
-    ss.innerHTML = `${esc(st.phase)}: ${st.phase === "Пошук" ? st.dirs + " тек" : st.analyzed + " / " + st.candidates} · знайдено ${st.found}<div class="progress"><i></i></div>`;
-  } else if (st.error) ss.textContent = "Помилка: " + st.error;
-  else ss.textContent = st.last_scan_at ? "Останній скан: " + fmtDT(st.last_scan_at) : "Ще не скановано";
-  if (was && !st.running) { await loadPlugins(); toast(st.last_result ? `Готово, файлів: нових ${st.last_result.new}, оновлено ${st.last_result.updated}, видалено ${st.last_result.removed}` : "Готово"); if (tab === "history") renderHistory(); }
+    ss.innerHTML = `${esc(st.phase)}: ${st.phase === t("phase.search") ? esc(tn("pl.folder", st.dirs)) : st.analyzed + " / " + st.candidates} · ${th("st.found", {n: st.found})}<div class="progress"><i></i></div>`;
+  } else if (st.error) ss.textContent = t("toast.error", {e: st.error});
+  else ss.textContent = st.last_scan_at ? t("st.last", {d: fmtDT(st.last_scan_at)}) : t("st.never");
+  if (was && !st.running) { await loadPlugins(); toast(st.last_result ? t("st.done", {n: st.last_result.new, u: st.last_result.updated, r: st.last_result.removed}) : t("st.doneShort")); if (tab === "history") renderHistory(); }
   if (first && !was && st.running) {}
   return st;
 }
 
 async function renderHistory() {
-  const h = await api("/api/history"); const kinds = {new: "нове", updated: "оновлено", removed: "видалено", moved: "переміщено", returned: "повернулось"};
-  $("#tab-history").innerHTML = h.length ? h.map(s => `<div class="scan"><b>${fmtDT(s.started_at)}</b> <span class="sub">· ${s.mode === "full" ? "весь диск" : "стандартні теки"} · ${esc(s.trigger)} · знайдено ${s.found}</span>
-    <div class="sub">нових: ${s.new_count} · оновлень: ${s.updated_count} · видалено: ${s.removed_count}</div>
-    ${s.changes.map(c => `<div class="k-${c.kind}">${kinds[c.kind] || c.kind}: <b>${esc(c.name)}</b> <span class="sub">${esc(c.detail)}</span></div>`).join("")}
-    ${s.errors ? `<details><summary class="sub">Попередження (${s.errors.split("\n").length})</summary><pre class="sub">${esc(s.errors)}</pre></details>` : ""}</div>`).join("") : `<div class="empty">Скани ще не запускались.</div>`;
+  const h = await api("/api/history"), word = (k, raw) => I18N[LANG][k] || raw;
+  $("#tab-history").innerHTML = h.length ? h.map(s => `<div class="scan"><b>${fmtDT(s.started_at)}</b> <span class="sub">· ${th(s.mode === "full" ? "h.full" : "h.standard")} · ${esc(word("trigger." + s.trigger, s.trigger))} · ${th("st.found", {n: s.found})}</span>
+    <div class="sub">${th("h.counts", {n: s.new_count, u: s.updated_count, r: s.removed_count})}</div>
+    ${s.changes.map(c => `<div class="k-${c.kind}">${esc(word("kind." + c.kind, c.kind))}: <b>${esc(c.name)}</b> <span class="sub">${esc(c.detail)}</span></div>`).join("")}
+    ${s.errors ? `<details><summary class="sub">${th("h.warnings", {n: s.errors.split("\n").length})}</summary><pre class="sub">${esc(s.errors)}</pre></details>` : ""}</div>`).join("") : `<div class="empty">${th("h.empty")}</div>`;
 }
 
 async function renderSettings() {
   const st = await api("/api/status"); const sc = st.schedule;
+  const radio = (name, value, on, label) => `<label style="display:block;margin:6px 0"><input type="radio" name="${name}" value="${value}" ${on ? "checked" : ""}> ${label}</label>`;
   $("#tab-settings").innerHTML = `
-  <div class="panel"><h3>Що сканувати</h3>
-    <label style="display:block;margin:6px 0"><input type="radio" name="mode" value="standard" ${st.scan_mode === "standard" ? "checked" : ""}> Стандартні теки плагінів (швидко, секунди)</label>
-    <label style="display:block;margin:6px 0"><input type="radio" name="mode" value="full" ${st.scan_mode === "full" ? "checked" : ""}> Весь диск (знаходить нестандартні та не-macOS плагіни; кілька хвилин)</label>
-    <div class="hint">Цей режим використовується кнопкою «Сканувати» та тижневим автоскануванням.</div></div>
-  <div class="panel"><h3>Автоскан раз на тиждень</h3>
-    ${sc.supported ? `<div>Статус: <b>${sc.installed ? (sc.loaded ? "увімкнено" : "файл є, але не завантажено") : "вимкнено"}</b> <span class="sub">(понеділок, ~11:07; якщо комп'ютер був вимкнений — запуститься після увімкнення)</span></div>
-      <div class="row-actions"><button id="schOn" class="primary">${sc.installed ? "Перевстановити" : "Увімкнути"}</button>${sc.installed ? '<button id="schOff">Вимкнути</button>' : ""}</div>
-      <div class="hint">Щоб фоновий скан бачив усі теки, може знадобитись дозвіл «Повний доступ до диска» для python3 (Системні налаштування → Конфіденційність і безпека).</div>`
-      : `<div class="sub">Доступно лише на macOS.</div>`}</div>
-  <div class="panel"><h3>Правила й дані</h3>
-    <div class="sub">Тека даних: <code>${esc(st.home)}</code></div>
-    <div class="sub">Штатні плагіни: <code>stock_rules.json</code> · шляхи ліцензій: <code>license_rules.json</code> · назви виробників: <code>vendor_rules.json</code> — відредагуйте ці файли й просканьте знову.</div>
-    <div class="sub">Версія ${esc(st.version)}</div>
-    ${/PlugiusApp/.test(navigator.userAgent) ? "" : '<div class="row-actions"><button id="quit">Вимкнути застосунок</button></div>'}</div>`;
-  document.querySelectorAll('input[name=mode]').forEach(r => r.onchange = async () => { await api("/api/settings", {method: "POST", body: {scan_mode: r.value}}); toast("Збережено"); });
+  <div class="panel"><h3>${th("set.lang")}</h3>
+    ${radio("lang", "uk", LANG === "uk", th("lang.uk"))}${radio("lang", "en", LANG === "en", th("lang.en"))}
+    <div class="hint">${th("set.lang.hint")}</div></div>
+  <div class="panel"><h3>${th("set.what")}</h3>
+    ${radio("mode", "standard", st.scan_mode === "standard", th("set.standard"))}${radio("mode", "full", st.scan_mode === "full", th("set.full"))}
+    <div class="hint">${th("set.modeHint")}</div></div>
+  <div class="panel"><h3>${th("set.weekly")}</h3>
+    ${sc.supported ? `<div>${th("set.status")} <b>${th(sc.installed ? (sc.loaded ? "set.on" : "set.notLoaded") : "set.off")}</b> <span class="sub">${th("set.when")}</span></div>
+      <div class="row-actions"><button id="schOn" class="primary">${th(sc.installed ? "set.reinstall" : "set.enable")}</button>${sc.installed ? `<button id="schOff">${th("set.disable")}</button>` : ""}</div>
+      <div class="hint">${th("set.fda")}</div>`
+      : `<div class="sub">${th("set.macOnly")}</div>`}</div>
+  <div class="panel"><h3>${th("set.rules")}</h3>
+    <div class="sub">${th("set.dataDir", {d: "<code>" + esc(st.home) + "</code>"})}</div>
+    <div class="sub">${th("set.rulesText", {a: "<code>stock_rules.json</code>", b: "<code>license_rules.json</code>", c: "<code>vendor_rules.json</code>"})}</div>
+    <div class="sub">${th("set.version", {v: esc(st.version)})}</div>
+    ${/PlugiusApp/.test(navigator.userAgent) ? "" : `<div class="row-actions"><button id="quit">${th("set.quit")}</button></div>`}</div>`;
+  // Нова мова потрібна і серверу, і всім уже показаним текстам, тож простіше перезавантажити сторінку
+  document.querySelectorAll('input[name=lang]').forEach(r => r.onchange = () => { try { localStorage.setItem("plugius.lang", r.value); } catch (e) {} location.reload(); });
+  document.querySelectorAll('input[name=mode]').forEach(r => r.onchange = async () => { await api("/api/settings", {method: "POST", body: {scan_mode: r.value}}); toast(t("toast.saved")); });
   const on = $("#schOn"), off = $("#schOff");
-  if (on) on.onclick = async () => { try { await api("/api/schedule", {method: "POST", body: {enable: true}}); toast("Автоскан увімкнено"); renderSettings(); } catch (e) { alert(e.message); renderSettings(); } };
-  if (off) off.onclick = async () => { await api("/api/schedule", {method: "POST", body: {enable: false}}); toast("Автоскан вимкнено"); renderSettings(); };
-  if ($("#quit")) $("#quit").onclick = async () => { if (confirm("Вимкнути Plugius? Дані збережуться.")) { try { await api("/api/quit", {method: "POST", body: {}}); } catch (e) {} document.body.innerHTML = '<div class="empty" style="margin:40px">Plugius вимкнено. Закрийте цю вкладку.</div>'; } };
+  if (on) on.onclick = async () => { try { await api("/api/schedule", {method: "POST", body: {enable: true}}); toast(t("toast.schedOn")); renderSettings(); } catch (e) { alert(e.message); renderSettings(); } };
+  if (off) off.onclick = async () => { await api("/api/schedule", {method: "POST", body: {enable: false}}); toast(t("toast.schedOff")); renderSettings(); };
+  if ($("#quit")) $("#quit").onclick = async () => { if (confirm(t("quit.confirm"))) { try { await api("/api/quit", {method: "POST", body: {}}); } catch (e) {} document.body.innerHTML = `<div class="empty" style="margin:40px">${th("quit.done")}</div>`; } };
 }
 
 let tab = "plugins";
@@ -550,18 +732,18 @@ function showTab(t) {
 document.addEventListener("click", e => {
   const a = e.target.closest("nav a"); if (a) return showTab(a.dataset.tab);
   const c = e.target.closest(".chip"); if (c) { const f = c.dataset.f; S.fmt.has(f) ? S.fmt.delete(f) : S.fmt.add(f); return render(); }
-  const th = e.target.closest("th[data-s]"); if (th) { const k = th.dataset.s; if (S.sort === k) S.dir *= -1; else { S.sort = k; S.dir = 1; } return render(); }
+  const hc = e.target.closest("th[data-s]"); if (hc) { const k = hc.dataset.s; if (S.sort === k) S.dir *= -1; else { S.sort = k; S.dir = 1; } return render(); }
   if (e.target.closest("#ackNew")) { api("/api/ack-new", {method: "POST", body: {}}).then(() => { S.all.forEach(clearNew); render(); }); return; }
   const tw = e.target.closest("[data-tw]"); if (tw) {
     // Без перемальовування таблиці: інакше анімація не спрацює
     const id = Number(tw.dataset.tw), open = !S.expanded.has(id);
     open ? S.expanded.add(id) : S.expanded.delete(id);
-    tw.classList.toggle("open", open); tw.setAttribute("aria-expanded", open); tw.setAttribute("aria-label", (open ? "Згорнути" : "Розгорнути") + " файли");
+    tw.classList.toggle("open", open); tw.setAttribute("aria-expanded", open); tw.setAttribute("aria-label", t(open ? "tw.collapse" : "tw.expand"));
     document.querySelectorAll(`tr.file[data-p="${id}"]`).forEach(r => r.classList.toggle("open", open));
     return;
   }
   const rv = e.target.closest("[data-reveal]"); if (rv) { api("/api/reveal", {method: "POST", body: {id: Number(rv.dataset.reveal)}}).catch(ex => toast(ex.message)); return; }
-  const cp = e.target.closest("[data-copy]"); if (cp) { const f = fileById(Number(cp.dataset.copy)); if (f && navigator.clipboard) navigator.clipboard.writeText(f.path); toast("Шлях скопійовано"); return; }
+  const cp = e.target.closest("[data-copy]"); if (cp) { const f = fileById(Number(cp.dataset.copy)); if (f && navigator.clipboard) navigator.clipboard.writeText(f.path); toast(t("toast.copied")); return; }
   const r = e.target.closest("tr.row");
   if (r) { const id = Number(r.dataset.id); return S.open === id ? closeDrawer() : openDrawer(id); }
 });
@@ -578,7 +760,7 @@ $("#btnCancel").onclick = () => api("/api/scan/cancel", {method: "POST", body: {
 (async function init() {
   await loadPlugins(); await refreshStatus(true);
   setInterval(() => refreshStatus().catch(() => {}), 1200);
-})().catch(e => { document.body.insertAdjacentHTML("afterbegin", `<div class="empty">Не вдалось підключитись до Plugius: ${esc(e.message)}</div>`); });
+})().catch(e => { document.body.insertAdjacentHTML("afterbegin", `<div class="empty">${th("err.connect", {e: esc(e.message)})}</div>`); });
 </script>
 </body>
 </html>

@@ -51,6 +51,8 @@ class Handler(BaseHTTPRequestHandler):
 
     # --- допоміжні
     def _send(self, code, body, ctype="application/json; charset=utf-8", extra=None):
+        if isinstance(body, dict) and isinstance(body.get("error"), str):
+            body = dict(body, error=core.tr(body["error"], self._lang()))
         if isinstance(body, (dict, list)):
             body = json.dumps(body, ensure_ascii=False).encode("utf-8")
         elif isinstance(body, str):
@@ -63,6 +65,9 @@ class Handler(BaseHTTPRequestHandler):
             self.send_header(k, v)
         self.end_headers()
         self.wfile.write(body)
+
+    def _lang(self):
+        return core.lang_of(urlparse(self.path).query)
 
     def _host_ok(self):
         host = (self.headers.get("Host") or "").split(":")[0].lower()
@@ -97,7 +102,7 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         if not self._host_ok():
             return self._send(403, {"error": "forbidden host"})
-        path = urlparse(self.path).path
+        path, lang = urlparse(self.path).path, self._lang()
         try:
             if path in ("/", "/index.html"):
                 with open(UI_PATH, "rb") as f:
@@ -107,9 +112,9 @@ class Handler(BaseHTTPRequestHandler):
             con = core.connect()
             try:
                 if path == "/api/plugins":
-                    return self._send(200, core.list_plugins(con))
+                    return self._send(200, core.localize(core.list_plugins(con), lang))
                 if path == "/api/products":
-                    return self._send(200, core.list_products(con))
+                    return self._send(200, core.localize(core.list_products(con), lang))
                 if path == "/api/status":
                     st = dict(core.STATE)
                     st["last_scan_at"] = core.get_setting(con, "last_scan_at", "")
@@ -120,11 +125,11 @@ class Handler(BaseHTTPRequestHandler):
                     st["version"] = core.VERSION
                     st["is_mac"] = core.IS_MAC
                     st["plugin_count"] = con.execute("SELECT COUNT(*) FROM plugins").fetchone()[0]
-                    return self._send(200, st)
+                    return self._send(200, core.localize_status(st, lang))
                 if path == "/api/history":
-                    return self._send(200, core.history(con))
+                    return self._send(200, core.localize_history(core.history(con), lang))
                 if path == "/api/export.csv":
-                    data = core.export_csv(con)
+                    data = core.export_csv(con, lang=lang)
                     return self._send(200, data, "text/csv; charset=utf-8",
                                       {"Content-Disposition": 'attachment; filename="pluginvault.csv"'})
             finally:
@@ -211,6 +216,7 @@ class Handler(BaseHTTPRequestHandler):
                 try:
                     ok = core.update_product(con, pid, data)
                     p = core.product_of(con, pid)
+                    p = p and core.localize([p], self._lang())[0]
                     return self._send(200 if ok else 404, p if ok else {"error": "не знайдено"})
                 finally:
                     con.close()
@@ -220,7 +226,7 @@ class Handler(BaseHTTPRequestHandler):
                 try:
                     ok = core.update_manual(con, pid, data)
                     row = con.execute("SELECT * FROM plugins WHERE id=?", (pid,)).fetchone()
-                    return self._send(200 if ok else 404, core.row_to_dict(row) if row else {"error": "не знайдено"})
+                    return self._send(200 if ok else 404, core.localize([core.row_to_dict(row)], self._lang())[0] if row else {"error": "не знайдено"})
                 finally:
                     con.close()
             self._send(404, {"error": "not found"})

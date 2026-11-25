@@ -7,6 +7,10 @@ RES="$DIR/../Resources"
 BIN="$DIR/Plugius-bin"
 LOG="$HOME/Desktop/Plugius-build.log"
 
+# Мова повідомлень за системою: українська, якщо macOS українською, інакше англійська
+if /usr/bin/defaults read -g AppleLanguages 2>/dev/null | sed -n 2p | grep -qiE '^[[:space:]]*"?uk([-_",]|$)'; then UK=1; else UK=0; fi
+msg() { if [ "$UK" = 1 ]; then echo "$1"; else echo "$2"; fi; }
+
 notify() { /usr/bin/osascript -e "display notification \"$1\" with title \"Plugius\"" >/dev/null 2>&1; }
 
 # Перший придатний Python зі списку. /usr/bin/python3 без Command Line Tools лише заглушка,
@@ -27,7 +31,7 @@ shopt -s execfail
 if [ -x "$BIN" ]; then exec "$BIN"; fi
 
 if /usr/bin/xcode-select -p >/dev/null 2>&1 && [ -x /usr/bin/swiftc ]; then
-  notify "Збираю вікно застосунку (до хвилини)…"
+  notify "$(msg "Збираю вікно застосунку (до хвилини)…" "Building the app window (up to a minute)…")"
   if /usr/bin/swiftc -O -swift-version 5 "$RES/main.swift" -o "$BIN.tmp" -framework Cocoa -framework WebKit >"$LOG" 2>&1; then
     mv -f "$BIN.tmp" "$BIN"
     /usr/bin/codesign -s - --force "$BIN" >/dev/null 2>&1
@@ -41,7 +45,7 @@ fi
 # Запасний варіант: сервер + вікно браузера в режимі застосунку
 PY="$(pick_python "$RES/python/bin/python3" /opt/homebrew/bin/python3 /usr/local/bin/python3 /usr/bin/python3)"
 if [ -z "$PY" ]; then
-  /usr/bin/osascript -e 'display alert "Plugius" message "Не знайдено Python 3. Завантажте застосунок заново або виконайте в Терміналі: xcode-select --install"' >/dev/null 2>&1
+  /usr/bin/osascript -e "display alert \"Plugius\" message \"$(msg "Не знайдено Python 3. Завантажте застосунок заново або виконайте в Терміналі: xcode-select --install" "Python 3 not found. Download the app again or run in Terminal: xcode-select --install")\"" >/dev/null 2>&1
   exit 1
 fi
 export PLUGINVAULT_PORT=8765 PYTHONDONTWRITEBYTECODE=1

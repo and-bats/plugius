@@ -474,6 +474,108 @@ s, b = req("/api/reveal", "POST", {"id": sid})
 check(s == 400, "reveal поза macOS чесно відмовляє")
 s, b = req("/api/scan", "POST", {"mode": "bogus"})
 check(s == 400, "невідомий режим відхилено")
+
+print("== 6. Англійська мова")
+import re
+CYR = re.compile("[а-яіїєґА-ЯІЇЄҐ]")
+check(core.tr("дата встановлення пакета (pkgutil)", "en") == "package install date (pkgutil)", "точна фраза перекладається")
+check(core.tr("Імовірно: інсталятор «Pro-Q.dmg» у Downloads (URL невідомий)", "en") == "Probably: installer “Pro-Q.dmg” in Downloads (URL unknown)",
+      "фраза з шаблону перекладається, вставка лишається")
+check(core.tr("Встановлено пакетом com.fab.pkg", "en") == "Installed by package com.fab.pkg", "префікс «Встановлено пакетом»")
+check(core.tr("Ефект · Reverb · версія 1.2 · © Valhalla", "en") == "Effect · Reverb · version 1.2 · © Valhalla", "складений опис перекладається частинами")
+check(core.tr("Інструмент (AU)", "en") == "Instrument (AU)", "категорія з форматом")
+check(core.tr("Своя фраза власника", "en") == "Своя фраза власника", "невідома фраза лишається як є")
+check(core.tr("дата встановлення пакета (pkgutil)", "uk") == "дата встановлення пакета (pkgutil)", "українською нічого не змінюється")
+check(core.tr("", "en") == "" and core.tr(None, "en") is None, "порожнє значення лишається")
+check(core.lang_of("lang=en") == "en" and core.lang_of("lang=uk") == "uk" and core.lang_of("") == "uk" and core.lang_of("lang=de") == "uk",
+      "мова із запиту: лише uk або en")
+
+
+def cyr_leaks(obj, where=""):
+    """Кирилиця поза ручними полями й назвами (їх не перекладаємо ніколи)."""
+    out = []
+    if isinstance(obj, dict):
+        manual = lambda k: bool(obj.get(k))
+        for k, v in obj.items():
+            if k in ("name", "path", "key", "product", "notes", "au_components") or k.endswith("_manual"):
+                continue
+            if (k == "source_eff" and manual("source_manual")) or (k == "description_eff" and manual("description_manual")) \
+                    or (k == "vendor_eff" and manual("vendor_manual")):
+                continue
+            out += cyr_leaks(v, where + "." + k)
+    elif isinstance(obj, list):
+        for i, v in enumerate(obj):
+            out += cyr_leaks(v, where + "[%d]" % i)
+    elif isinstance(obj, str) and CYR.search(obj):
+        out.append("%s = %s" % (where, obj[:80]))
+    return out
+
+
+con = core.connect()
+con.execute("UPDATE plugins SET vendor='', vendor_manual='' WHERE name='Serum'")  # «Невідомо» теж має перекластись
+con.commit()
+con.close()
+for path in ("/api/products?lang=en", "/api/plugins?lang=en", "/api/history?lang=en", "/api/status?lang=en"):
+    s, b = req(path)
+    leaks = cyr_leaks(json.loads(b))
+    check(s == 200 and not leaks, "%s без кирилиці поза ручними полями %s" % (path, leaks[:5]))
+prods_en = json.loads(req("/api/products?lang=en")[1])
+check(any(p["vendor_eff"] == "Unknown" for p in prods_en), "«Невідомо» → Unknown")
+check(any((p["source_auto"] or "").startswith("Probably:") for p in prods_en), "«Імовірно» → Probably")
+rp_en = [p for p in prods_en if p["name"] == "Replika"][0]
+check(rp_en["notes"] == "спільна", "ручні поля англійською не перекладаються")
+prods_uk = json.loads(req("/api/products")[1])
+check(any((p["source_auto"] or "").startswith("Імовірно") for p in prods_uk), "без lang усе українською, як було")
+s, b = req("/api/scan?lang=en", "POST", {"mode": "bogus"})
+check(s == 400 and json.loads(b)["error"] == "unknown mode", "помилка API англійською")
+s, b = req("/api/export.csv?lang=en")
+csv_en = b.decode("utf-8-sig")
+check(csv_en.splitlines()[0].startswith("Product,Name,Vendor,Format"), "CSV англійською: заголовки")
+check("Ефект" not in csv_en and "Effect (AU)" in csv_en and "Instrument" in csv_en, "CSV англійською: збережені фрази перекладено")
+check(b"\xd0\x9f\xd1\x80\xd0\xbe\xd0\xb4\xd1\x83\xd0\xba\xd1\x82" in req("/api/export.csv")[1], "CSV без lang українською")
+
+# Ліцензії: англійські підказки з типових правил; підказку, змінену власником, не перекладаємо
+defaults = json.load(open(os.path.join(APP, "rules", "license_rules.json"), encoding="utf-8"))
+cy_fields = [(r["label"], k) for r in defaults["rules"] for k in ("hint", "short", "label") if CYR.search(r.get(k, ""))]
+missing_en = [x for x in cy_fields if not defaults["rules"][[r["label"] for r in defaults["rules"]].index(x[0])].get(x[1] + "_en")]
+check(not missing_en, "у кожного українського hint/short/label є переклад %s" % missing_en[:5])
+check(all(not CYR.search(r.get(k + "_en", "")) for r in defaults["rules"] for k in ("hint", "short", "label")), "переклади правил без кирилиці")
+waves = [r for r in defaults["rules"] if r["label"] == "Waves"][0]
+fab_r = [r for r in defaults["rules"] if r["label"] == "FabFilter"][0]
+old = {"_comment": "x", "rules": [{k: v for k, v in r.items() if not k.endswith("_en")} for r in (waves, fab_r)]}
+user = json.loads(json.dumps(old))
+user["rules"][0]["hint"] = "Мій запис про Waves"
+merged = core.merge_rules(old, {"_comment": "x", "rules": [waves, fab_r]}, user)
+check(merged["rules"][0]["hint"] == "Мій запис про Waves" and merged["rules"][0].get("hint_en") == waves["hint_en"],
+      "злиття доносить hint_en і зберігає правку власника")
+check(merged["rules"][1]["short_en"] == fab_r["short_en"], "злиття доносить short_en")
+ph = core.license_phrases(defaults, merged)
+check(ph.get(fab_r["hint"]) == fab_r["hint_en"], "незмінена підказка має англійський варіант")
+check("Мій запис про Waves" not in ph, "змінена власником підказка не перекладається")
+user2 = json.loads(json.dumps(merged))
+user2["rules"].append({"label": "Мій виробник", "vendors": ["my"], "hint": "Свій текст", "hint_en": "My own text"})
+check(core.license_phrases(defaults, user2).get("Свій текст") == "My own text", "власний hint_en у правилі власника діє")
+
+# Інтерфейс: словник обох мов
+ui = open(os.path.join(APP, "ui.html"), encoding="utf-8").read()
+m = re.search(r'<script type="application/json" id="i18n">(.*?)</script>', ui, re.S)
+check(bool(m), "словник у ui.html")
+if m:
+    L = json.loads(m.group(1))
+    check(set(L["uk"]) == set(L["en"]), "ключі однакові в uk і en (%s)" % sorted(set(L["uk"]) ^ set(L["en"]))[:5])
+    bad_pl = [k for k in L["uk"] if isinstance(L["uk"][k], list) and not (len(L["uk"][k]) == 3 and len(L["en"].get(k, [])) == 2)]
+    check(not bad_pl, "множина: три форми uk і дві en %s" % bad_pl[:5])
+    ph_re = re.compile(r"\{\w+\}")
+    flat = lambda v: " ".join(v) if isinstance(v, list) else v
+    bad_ph = [k for k in L["uk"] if k in L["en"] and sorted(set(ph_re.findall(flat(L["uk"][k])))) != sorted(set(ph_re.findall(flat(L["en"][k]))))]
+    check(not bad_ph, "підстановки {..} однакові в обох мовах %s" % bad_ph[:5])
+    check(not [k for k, v in L["en"].items() if CYR.search(flat(v))], "англійський словник без кирилиці")
+    used = set(re.findall(r'\bt[hn]?\("([\w.]+)"', ui)) | set(re.findall(r'data-i18n(?:-\w+)?="([\w.]+)"', ui))
+    check(not (used - set(L["uk"])), "усі t(\"…\") є в словнику %s" % sorted(used - set(L["uk"]))[:5])
+    code = ui[ui.index("<body>"):].replace(m.group(0), "")
+    code = re.sub(r"(?m)^\s*//.*$|\s//\s.*$|/\*.*?\*/", "", code)
+    stray = [ln.strip()[:70] for ln in code.splitlines() if CYR.search(ln)]
+    check(not stray, "у розмітці й коді інтерфейсу немає тексту поза словником %s" % stray[:5])
 srv.shutdown()
 
 print("== Збірка застосунку: вбудований Python і лаунчер")

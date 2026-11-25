@@ -1,5 +1,5 @@
 {
- "_comment": "Правила пошуку ліцензій за виробником. 'vendors' — підрядки назви виробника (малими літерами, без пробілів і розділових знаків). 'products' і 'except_products' — необов'язкові підрядки назви плагіна в такому ж вигляді. 'paths' — місця файлів ліцензій (показуються, лише якщо файл існує; підтримується ~ та *). 'hint' — де дивитись ліцензію, якщо файлу немає; 'short' — коротко для таблиці. 'kind': 'free' означає, що ліцензія не потрібна. Звірено з реальним Mac 2026-11-01 лише для Native Instruments, iZotope, Celemony, Valhalla, Klevgrand, Sound Radix, Youlean, Splice; решта шляхів складена з пам'яті, виправляйте під свій комп'ютер.",
+ "_comment": "Правила пошуку ліцензій за виробником. 'vendors' — підрядки назви виробника (малими літерами, без пробілів і розділових знаків). 'products' і 'except_products' — необов'язкові підрядки назви плагіна в такому ж вигляді. 'paths' — місця файлів ліцензій (показуються, лише якщо файл існує; підтримується ~ та *). 'hint' — де дивитись ліцензію, якщо файлу немає; 'short' — коротко для таблиці. 'hint_en', 'short_en', 'label_en' — те саме англійською; якщо змінюєте 'hint' чи 'short', змініть і англійський варіант, інакше англійською покажеться ваш текст. 'kind': 'free' означає, що ліцензія не потрібна. Звірено з реальним Mac 2026-11-01 лише для Native Instruments, iZotope, Celemony, Valhalla, Klevgrand, Sound Radix, Youlean, Splice; решта шляхів складена з пам'яті, виправляйте під свій комп'ютер.",
  "rules": [
   {
    "label": "Waves",
@@ -12,6 +12,7 @@
     "~/Library/Application Support/Waves/Licenses/*"
    ],
    "hint": "Waves Central → Licenses (ліцензії прив'язані до облікового запису Waves або до iLok).",
+   "hint_en": "Waves Central → Licenses (licenses are tied to your Waves account or to iLok).",
    "short": "Waves Central"
   },
   {
@@ -22,6 +23,7 @@
    "kind": "account",
    "paths": [],
    "hint": "Native Access, обліковий запис NI: там видно, чи продукт активовано. Окремого файла ліцензії на диску немає.",
+   "hint_en": "Native Access, NI account: it shows whether the product is activated. There is no separate license file on disk.",
    "short": "Native Access"
   },
   {
@@ -36,6 +38,7 @@
     "~/Library/Application Support/Universal Audio/*.lic"
    ],
    "hint": "UA Connect → ліцензії прив'язані до обладнання UAD та акаунта Universal Audio.",
+   "hint_en": "UA Connect → licenses are tied to your UAD hardware and Universal Audio account.",
    "short": "UA Connect"
   },
   {
@@ -49,6 +52,7 @@
     "~/Library/Application Support/iZotope/*.lic"
    ],
    "hint": "iZotope Product Portal / Native Access, обліковий запис iZotope.",
+   "hint_en": "iZotope Product Portal / Native Access, iZotope account.",
    "short": "Product Portal"
   },
   {
@@ -69,6 +73,7 @@
     "/Library/Application Support/Plugin Alliance/*"
    ],
    "hint": "Plugin Alliance Installation Manager (обліковий запис Plugin Alliance або iLok).",
+   "hint_en": "Plugin Alliance Installation Manager (Plugin Alliance account or iLok).",
    "short": "Plugin Alliance"
   },
   {
@@ -82,7 +87,9 @@
     "/Library/Application Support/FabFilter/*"
    ],
    "hint": "Ліцензійний ключ приходить листом від FabFilter; його також видно в «Про програму» всередині плагіна.",
-   "short": "Ключ у листі"
+   "hint_en": "The license key comes by email from FabFilter; it is also shown under “About” inside the plugin.",
+   "short": "Ключ у листі",
+   "short_en": "Key in email"
   },
   {
    "label": "Soundtoys",
@@ -92,6 +99,7 @@
    "kind": "ilok",
    "paths": [],
    "hint": "Ліцензія в iLok License Manager (iLok або на комп'ютері), обліковий запис Soundtoys.",
+   "hint_en": "License in iLok License Manager (iLok or this computer), Soundtoys account.",
    "short": "iLok"
   },
   {
@@ -104,6 +112,7 @@
    "kind": "ilok",
    "paths": [],
    "hint": "Ліцензія в iLok License Manager та в обліковому записі Slate Digital.",
+   "hint_en": "License in iLok License Manager and in your Slate Digital account.",
    "short": "iLok"
   },
   {
@@ -114,10 +123,12 @@
    "kind": "ilok",
    "paths": [],
    "hint": "iLok License Manager та обліковий запис Eventide.",
+   "hint_en": "iLok License Manager and your Eventide account.",
    "short": "iLok"
   },
   {
    "label": "Avid (платні)",
+   "label_en": "Avid (paid)",
    "vendors": [
     "avid",
     "digidesign"
@@ -125,6 +136,7 @@
    "kind": "ilok",
    "paths": [],
    "hint": "iLok License Manager та обліковий запис Avid.",
+   "hint_en": "iLok License Manager and your Avid account.",
    "short": "iLok"
   },
   {
@@ -146,6 +158,7 @@
    "kind": "ilok",
    "paths": [],
    "hint": "iLok License Manager або обліковий запис Antares.",
+   "hint_en": "iLok License Manager or your Antares account.",
    "short": "iLok"
   },
   {
@@ -169,6 +182,7 @@
     "~/Library/Application Support/Arturia/*"
    ],
    "hint": "Arturia Software Center, обліковий запис Arturia.",
+   "hint_en": "Arturia Software Center, Arturia account.",
    "short": "Software Center"
   },
   {
@@ -183,7 +197,9 @@
     "/Library/Application Support/Xfer/*"
    ],
    "hint": "Серійник у листі від Xfer, обліковий запис Xfer.",
-   "short": "Серійник у листі"
+   "hint_en": "Serial number in the email from Xfer, Xfer account.",
+   "short": "Серійник у листі",
+   "short_en": "Serial in email"
   },
   {
    "label": "Spectrasonics",
@@ -196,6 +212,7 @@
     "/Library/Application Support/Spectrasonics/*"
    ],
    "hint": "Spectrasonics Software Center / STEAM, обліковий запис Spectrasonics.",
+   "hint_en": "Spectrasonics Software Center / STEAM, Spectrasonics account.",
    "short": "Software Center"
   },
   {
@@ -209,10 +226,13 @@
     "/Library/Application Support/u-he/*"
    ],
    "hint": "Файл ключа (.u-he-act або .txt) з листа u-he; ключ лежить у теці Application Support/u-he.",
-   "short": "Файл ключа"
+   "hint_en": "Key file (.u-he-act or .txt) from the u-he email; the key lives in the Application Support/u-he folder.",
+   "short": "Файл ключа",
+   "short_en": "Key file"
   },
   {
    "label": "Valhalla DSP (безкоштовні)",
+   "label_en": "Valhalla DSP (free)",
    "vendors": [
     "valhalla"
    ],
@@ -224,7 +244,9 @@
    "kind": "free",
    "paths": [],
    "hint": "Безкоштовний плагін, ліцензія не потрібна.",
-   "short": "Безкоштовний"
+   "hint_en": "Free plugin, no license needed.",
+   "short": "Безкоштовний",
+   "short_en": "Free"
   },
   {
    "label": "Valhalla DSP",
@@ -234,12 +256,14 @@
    "kind": "account",
    "paths": [],
    "hint": "Ліцензія в листі від Valhalla DSP; більшість плагінів вводить ключ усередині плагіна.",
+   "hint_en": "License in the email from Valhalla DSP; most plugins take the key inside the plugin.",
    "except_products": [
     "valhallasupermassive",
     "valhallafreqecho",
     "valhallaspacemodulator"
    ],
-   "short": "Ключ у листі"
+   "short": "Ключ у листі",
+   "short_en": "Key in email"
   },
   {
    "label": "Steinberg",
@@ -249,6 +273,7 @@
    "kind": "account",
    "paths": [],
    "hint": "Steinberg Activation Manager / eLicenser, обліковий запис MySteinberg.",
+   "hint_en": "Steinberg Activation Manager / eLicenser, MySteinberg account.",
    "short": "Activation Manager"
   },
   {
@@ -261,7 +286,9 @@
     "/Users/Shared/Library/Application Support/Celemony/Licenses/*"
    ],
    "hint": "Активація всередині Melodyne, обліковий запис Celemony (My Account). Файл активації має бути в /Users/Shared/Library/Application Support/Celemony/Licenses.",
-   "short": "Активація в Melodyne"
+   "hint_en": "Activation inside Melodyne, Celemony account (My Account). The activation file should be in /Users/Shared/Library/Application Support/Celemony/Licenses.",
+   "short": "Активація в Melodyne",
+   "short_en": "Activation in Melodyne"
   },
   {
    "label": "Output",
@@ -271,6 +298,7 @@
    "kind": "account",
    "paths": [],
    "hint": "Output Hub, обліковий запис Output.",
+   "hint_en": "Output Hub, Output account.",
    "short": "Output Hub"
   },
   {
@@ -281,6 +309,7 @@
    "kind": "account",
    "paths": [],
    "hint": "Toontrack Product Manager, обліковий запис Toontrack.",
+   "hint_en": "Toontrack Product Manager, Toontrack account.",
    "short": "Product Manager"
   },
   {
@@ -291,6 +320,7 @@
    "kind": "account",
    "paths": [],
    "hint": "Kilohearts Installer, обліковий запис Kilohearts.",
+   "hint_en": "Kilohearts Installer, Kilohearts account.",
    "short": "Kilohearts Installer"
   },
   {
@@ -302,6 +332,7 @@
    "kind": "account",
    "paths": [],
    "hint": "Reason Companion, обліковий запис Reason Studios.",
+   "hint_en": "Reason Companion, Reason Studios account.",
    "short": "Reason Companion"
   },
   {
@@ -312,6 +343,7 @@
    "kind": "ilok",
    "paths": [],
    "hint": "iLok License Manager, обліковий запис iLok: плагін захищений PACE/iLok.",
+   "hint_en": "iLok License Manager, iLok account: the plugin is protected by PACE/iLok.",
    "short": "iLok"
   },
   {
@@ -322,7 +354,9 @@
    "kind": "account",
    "paths": [],
    "hint": "Серійний номер вводиться всередині плагіна; шукайте лист від Klevgrand або магазину.",
-   "short": "Ключ у плагіні"
+   "hint_en": "The serial number is entered inside the plugin; look for the email from Klevgrand or the store.",
+   "short": "Ключ у плагіні",
+   "short_en": "Key in plugin"
   },
   {
    "label": "Youlean",
@@ -332,7 +366,9 @@
    "kind": "account",
    "paths": [],
    "hint": "Безкоштовна версія ліцензії не потребує; Pro активується ключем усередині плагіна (див. лист Youlean).",
-   "short": "Free чи Pro?"
+   "hint_en": "The free version needs no license; Pro is activated with a key inside the plugin (see the Youlean email).",
+   "short": "Free чи Pro?",
+   "short_en": "Free or Pro?"
   },
   {
    "label": "Splice",
@@ -342,7 +378,9 @@
    "kind": "account",
    "paths": [],
    "hint": "Обліковий запис Splice: це інтеграція застосунку Splice з Pro Tools, окремого ключа на диску немає.",
-   "short": "Обліковий запис"
+   "hint_en": "Splice account: this is the Splice app's integration with Pro Tools, there is no separate key on disk.",
+   "short": "Обліковий запис",
+   "short_en": "Account"
   }
  ]
 }

@@ -6,7 +6,7 @@ A local catalog of the audio plugins installed on your Mac: what you have, where
 
 ![Plugius: plugin list with disk usage by vendor](docs/screenshot.png)
 
-*The screenshot shows demo data. The interface is currently in Ukrainian; English is planned.*
+*The screenshot shows demo data in the Ukrainian interface.*
 
 ## Why
 
@@ -24,6 +24,7 @@ After a few years of music production, nobody remembers which vendor account a p
 - **New plugins are highlighted** after each scan, removed ones stay in the list as "removed from disk".
 - **Stock plugins** of Logic Pro and Pro Tools are hidden by default.
 - **Weekly automatic scan** (launchd) and CSV export.
+- **English and Ukrainian:** the interface follows the macOS language, and you can switch it in Settings. Your own notes and plugin names are never translated.
 - **Offline:** nothing leaves your Mac. The app listens only on `127.0.0.1`.
 
 ## Status

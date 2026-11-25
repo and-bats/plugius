@@ -5,6 +5,11 @@ import WebKit
 let port = 8765
 let baseURL = URL(string: "http://127.0.0.1:\(port)/")!
 
+// Мова за системою: українська, якщо macOS українською, інакше англійська. Інтерфейс сторінки має власний перемикач
+let systemLang = Locale.preferredLanguages.first ?? "en"
+let isUk = systemLang.lowercased().hasPrefix("uk")
+func L(_ uk: String, _ en: String) -> String { return isUk ? uk : en }
+
 func page(_ text: String, detail: String = "") -> String {
     return """
     <html><head><meta charset="utf-8"><style>
@@ -23,7 +28,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKNa
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         buildMenu()
-        web = WKWebView(frame: .zero, configuration: WKWebViewConfiguration())
+        let config = WKWebViewConfiguration()
+        // navigator.language у WKWebView може не збігатися з мовою macOS, тож передаємо її сторінці явно
+        let langJS = "window.plugiusSystemLang = \"\(systemLang.replacingOccurrences(of: "\"", with: ""))\";"
+        config.userContentController.addUserScript(WKUserScript(source: langJS, injectionTime: .atDocumentStart, forMainFrameOnly: true))
+        web = WKWebView(frame: .zero, configuration: config)
         web.customUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15 PlugiusApp"
         web.navigationDelegate = self
         web.uiDelegate = self
@@ -38,7 +47,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKNa
         window.setFrameAutosaveName("PlugiusMain")
         window.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
-        web.loadHTMLString(page("Запуск…"), baseURL: nil)
+        web.loadHTMLString(page(L("Запуск…", "Starting…")), baseURL: nil)
         ping { alive in
             if !alive { self.startServer() }
             self.waitForServer(attempt: 0)
@@ -83,7 +92,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKNa
 
     func startServer() {
         guard let py = findPython() else {
-            web.loadHTMLString(page("Не знайдено Python 3", detail: "Вбудований Python відсутній: завантажте застосунок заново.\nАбо відкрийте Термінал, виконайте xcode-select --install і запустіть Plugius ще раз."), baseURL: nil)
+            web.loadHTMLString(page(L("Не знайдено Python 3", "Python 3 not found"), detail: L("Вбудований Python відсутній: завантажте застосунок заново.\nАбо відкрийте Термінал, виконайте xcode-select --install і запустіть Plugius ще раз.", "The built-in Python is missing: download the app again.\nOr open Terminal, run xcode-select --install and start Plugius again.")), baseURL: nil)
             return
         }
         let res = Bundle.main.resourceURL!.appendingPathComponent("app")
@@ -98,7 +107,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKNa
         p.standardOutput = FileHandle.nullDevice
         p.standardError = FileHandle.nullDevice
         do { try p.run(); server = p } catch {
-            web.loadHTMLString(page("Не вдалося запустити сервер", detail: "\(error)"), baseURL: nil)
+            web.loadHTMLString(page(L("Не вдалося запустити сервер", "Couldn't start the server"), detail: "\(error)"), baseURL: nil)
         }
     }
 
@@ -109,7 +118,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKNa
             } else if attempt < 60 {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { self.waitForServer(attempt: attempt + 1) }
             } else {
-                self.web.loadHTMLString(page("Сервер не відповідає", detail: "Можливо, порт \(port) зайнятий іншою програмою."), baseURL: nil)
+                self.web.loadHTMLString(page(L("Сервер не відповідає", "The server isn't responding"), detail: L("Можливо, порт \(port) зайнятий іншою програмою.", "Port \(port) may be used by another app.")), baseURL: nil)
             }
         }
     }
@@ -169,7 +178,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKNa
     func webView(_ webView: WKWebView, runJavaScriptConfirmPanelWithMessage message: String,
                  initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (Bool) -> Void) {
         let a = NSAlert(); a.messageText = message
-        a.addButton(withTitle: "OK"); a.addButton(withTitle: "Скасувати")
+        a.addButton(withTitle: "OK"); a.addButton(withTitle: L("Скасувати", "Cancel"))
         completionHandler(a.runModal() == .alertFirstButtonReturn)
     }
 
@@ -180,32 +189,32 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKNa
         let main = NSMenu()
         let appItem = NSMenuItem(); main.addItem(appItem)
         let appMenu = NSMenu(); appItem.submenu = appMenu
-        appMenu.addItem(withTitle: "Про Plugius", action: #selector(NSApplication.orderFrontStandardAboutPanel(_:)), keyEquivalent: "")
+        appMenu.addItem(withTitle: L("Про Plugius", "About Plugius"), action: #selector(NSApplication.orderFrontStandardAboutPanel(_:)), keyEquivalent: "")
         appMenu.addItem(.separator())
-        appMenu.addItem(withTitle: "Сховати Plugius", action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
+        appMenu.addItem(withTitle: L("Сховати Plugius", "Hide Plugius"), action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
         appMenu.addItem(.separator())
-        appMenu.addItem(withTitle: "Вийти з Plugius", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        appMenu.addItem(withTitle: L("Вийти з Plugius", "Quit Plugius"), action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
 
         let editItem = NSMenuItem(); main.addItem(editItem)
-        let edit = NSMenu(title: "Редагування"); editItem.submenu = edit
-        edit.addItem(withTitle: "Скасувати", action: Selector(("undo:")), keyEquivalent: "z")
-        edit.addItem(withTitle: "Повторити", action: Selector(("redo:")), keyEquivalent: "Z")
+        let edit = NSMenu(title: L("Редагування", "Edit")); editItem.submenu = edit
+        edit.addItem(withTitle: L("Скасувати", "Undo"), action: Selector(("undo:")), keyEquivalent: "z")
+        edit.addItem(withTitle: L("Повторити", "Redo"), action: Selector(("redo:")), keyEquivalent: "Z")
         edit.addItem(.separator())
-        edit.addItem(withTitle: "Вирізати", action: #selector(NSText.cut(_:)), keyEquivalent: "x")
-        edit.addItem(withTitle: "Копіювати", action: #selector(NSText.copy(_:)), keyEquivalent: "c")
-        edit.addItem(withTitle: "Вставити", action: #selector(NSText.paste(_:)), keyEquivalent: "v")
-        edit.addItem(withTitle: "Вибрати все", action: #selector(NSText.selectAll(_:)), keyEquivalent: "a")
+        edit.addItem(withTitle: L("Вирізати", "Cut"), action: #selector(NSText.cut(_:)), keyEquivalent: "x")
+        edit.addItem(withTitle: L("Копіювати", "Copy"), action: #selector(NSText.copy(_:)), keyEquivalent: "c")
+        edit.addItem(withTitle: L("Вставити", "Paste"), action: #selector(NSText.paste(_:)), keyEquivalent: "v")
+        edit.addItem(withTitle: L("Вибрати все", "Select All"), action: #selector(NSText.selectAll(_:)), keyEquivalent: "a")
 
         let viewItem = NSMenuItem(); main.addItem(viewItem)
-        let view = NSMenu(title: "Вигляд"); viewItem.submenu = view
-        let reload = NSMenuItem(title: "Оновити сторінку", action: #selector(reloadPage), keyEquivalent: "r")
+        let view = NSMenu(title: L("Вигляд", "View")); viewItem.submenu = view
+        let reload = NSMenuItem(title: L("Оновити сторінку", "Reload Page"), action: #selector(reloadPage), keyEquivalent: "r")
         reload.target = self
         view.addItem(reload)
 
         let winItem = NSMenuItem(); main.addItem(winItem)
-        let win = NSMenu(title: "Вікно"); winItem.submenu = win
-        win.addItem(withTitle: "Згорнути", action: #selector(NSWindow.performMiniaturize(_:)), keyEquivalent: "m")
-        win.addItem(withTitle: "Закрити", action: #selector(NSWindow.performClose(_:)), keyEquivalent: "w")
+        let win = NSMenu(title: L("Вікно", "Window")); winItem.submenu = win
+        win.addItem(withTitle: L("Згорнути", "Minimize"), action: #selector(NSWindow.performMiniaturize(_:)), keyEquivalent: "m")
+        win.addItem(withTitle: L("Закрити", "Close"), action: #selector(NSWindow.performClose(_:)), keyEquivalent: "w")
         NSApp.windowsMenu = win
         NSApp.mainMenu = main
     }

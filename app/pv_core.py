@@ -14,8 +14,10 @@ import time
 import plistlib
 from datetime import datetime, timezone
 
+from pv_lang import lang_of, tr  # noqa: F401  (lang_of потрібен API)
+
 APP_DIR = os.path.dirname(os.path.abspath(__file__))
-VERSION = "0.8.1"
+VERSION = "0.9.0"
 IS_MAC = sys.platform == "darwin"
 
 
@@ -1359,40 +1361,118 @@ def history(con, limit=30):
     return out
 
 
-CSV_COLS = [("product", "Продукт"), ("name", "Назва"), ("vendor_eff", "Виробник"), ("format", "Формат"), ("platform", "Платформа"),
-            ("path", "Шлях"), ("size_bytes", "Розмір (байт)"), ("source_eff", "Звідки"),
-            ("installed_at", "Дата інсталяції"), ("version", "Версія"), ("license_text", "Ліцензія"),
-            ("description_eff", "Опис"), ("stock", "Штатний"), ("present", "Є на диску")]
+CSV_COLS = [("product", "Продукт", "Product"), ("name", "Назва", "Name"), ("vendor_eff", "Виробник", "Vendor"),
+            ("format", "Формат", "Format"), ("platform", "Платформа", "Platform"), ("path", "Шлях", "Path"),
+            ("size_bytes", "Розмір (байт)", "Size (bytes)"), ("source_eff", "Звідки", "Source"),
+            ("installed_at", "Дата інсталяції", "Installed"), ("version", "Версія", "Version"),
+            ("license_text", "Ліцензія", "License"), ("description_eff", "Опис", "Description"),
+            ("stock", "Штатний", "Stock"), ("present", "Є на диску", "On disk")]
 
 
-def license_text(d):
+def license_text(d, lang="uk"):
     parts = []
     if d.get("license_manual"):
         parts.append(d["license_manual"])
     for x in d.get("license_auto", []):
         if x.get("paths"):
-            parts.append("Файли: " + "; ".join(x["paths"]))
+            parts.append(("Files: " if lang == "en" else "Файли: ") + "; ".join(x["paths"]))
         elif x.get("text"):
             parts.append(x["text"])
     return " | ".join(parts)
 
 
-def export_csv(con, include_stock=False):
+def export_csv(con, include_stock=False, lang="uk"):
     import csv
     import io
     buf = io.StringIO()
     w = csv.writer(buf)
-    w.writerow([c[1] for c in CSV_COLS])
-    for p in list_products(con):
+    w.writerow([c[2] if lang == "en" else c[1] for c in CSV_COLS])
+    for p in localize(list_products(con), lang):
         if p["stock"] and not include_stock:
             continue
         for f in p["files"]:
             # Ручні значення спільні для продукту: новий формат теж їх отримує
             d = dict(f, product=p["name"], vendor_eff=p["vendor_eff"], license_manual=p["license_manual"],
                      source_eff=p["source_manual"] or f["source_eff"], description_eff=p["description_manual"] or f["description_eff"])
-            d["license_text"] = license_text(d)
-            w.writerow([d.get(k, "") for k, _ in CSV_COLS])
-    return "﻿" + buf.getvalue()
+            d["license_text"] = license_text(d, lang)
+            w.writerow([d.get(k, "") for k, *_ in CSV_COLS])
+    return "\ufeff" + buf.getvalue()
+
+
+# ---------------------------------------------------------------- мова
+# База лишається українською, переклад робиться при видачі. Ручні поля й назви не перекладаються ніколи.
+
+AUTO_FIELDS = ("platform", "arch", "category", "vendor_src", "installed_src", "source_auto", "description_auto", "stock_reason")
+
+
+def license_phrases(defaults=None, user=None):
+    """Українські тексти правил ліцензій → англійські (поля *_en). Текст, який власник змінив,
+    лишається без перекладу: англійський варіант до нього вже не пасує."""
+    if defaults is None:
+        try:
+            with open(os.path.join(APP_DIR, "rules", "license_rules.json"), "r", encoding="utf-8") as f:
+                defaults = json.load(f)
+        except (OSError, ValueError):
+            defaults = {}
+    if user is None:
+        user = load_rules("license_rules.json")
+    rules = lambda d: [r for r in (d.get("rules") if isinstance(d, dict) else None) or [] if isinstance(r, dict)]
+    by_label = dict((r.get("label"), r) for r in rules(defaults))
+    out = {}
+    for r in rules(defaults):
+        for k in ("hint", "short", "label"):
+            if r.get(k) and r.get(k + "_en"):
+                out[r[k]] = r[k + "_en"]
+    for r in rules(user):
+        d = by_label.get(r.get("label"), {})
+        for k in ("hint", "short", "label"):
+            en = r.get(k + "_en")
+            # Власний переклад власника діє завжди, типовий лише для незміненого тексту
+            if r.get(k) and en and (r[k] == d.get(k) or en != d.get(k + "_en")):
+                out[r[k]] = en
+    return out
+
+
+def _localize_one(d, lang, lic):
+    d = dict(d)
+    for k in AUTO_FIELDS:
+        if k in d:
+            d[k] = tr(d[k], lang)
+    if "platforms" in d:
+        d["platforms"] = [tr(x, lang) for x in d["platforms"]]
+    d["license_auto"] = [dict(x, label=tr(x.get("label"), lang, lic), short=tr(x.get("short"), lang, lic),
+                              text=tr(x.get("text"), lang, lic)) for x in d.get("license_auto", [])]
+    if not d.get("vendor_manual"):
+        d["vendor_eff"] = tr(d.get("vendor_eff"), lang)
+    d["source_eff"] = d.get("source_manual") or d.get("source_auto") or ""
+    d["description_eff"] = d.get("description_manual") or d.get("description_auto") or ""
+    if "files" in d:
+        d["files"] = [_localize_one(f, lang, lic) for f in d["files"]]
+    return d
+
+
+def localize(items, lang):
+    """Файли або продукти мовою інтерфейсу."""
+    if lang != "en":
+        return items
+    lic = license_phrases()
+    return [_localize_one(x, lang, lic) for x in items]
+
+
+def localize_history(scans, lang):
+    if lang != "en":
+        return scans
+    return [dict(s, errors=tr(s.get("errors"), lang), changes=[dict(c, detail=tr(c.get("detail"), lang)) for c in s["changes"]])
+            for s in scans]
+
+
+def localize_status(st, lang):
+    if lang != "en":
+        return st
+    st = dict(st, phase=tr(st.get("phase"), lang), error=tr(st.get("error"), lang))
+    if isinstance(st.get("last_result"), dict):
+        st["last_result"] = dict(st["last_result"], errors=[tr(e, lang) for e in st["last_result"].get("errors", [])])
+    return st
 
 
 # ---------------------------------------------------------------- розклад (launchd)
